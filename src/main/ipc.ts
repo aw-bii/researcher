@@ -17,7 +17,10 @@ export function validatePersona(p: { systemPrompt?: string; name?: string }): vo
 export function registerIpcHandlers(_win: BrowserWindow): void {
   // chat:send — starts streaming, pushes chat:chunk and chat:done via webContents
   ipcMain.handle(IPC.CHAT_SEND, async (event, { conversationId, message, backend, personaId }) => {
-    if (typeof message !== 'string' || message.length > MAX_MESSAGE_LENGTH) {
+    if (typeof message !== 'string') {
+      throw new Error('Message must be a string')
+    }
+    if (message.length > MAX_MESSAGE_LENGTH) {
       throw new Error(`Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters`)
     }
     const adapter = AdapterManager.get(backend) ?? AdapterManager.getActive()
