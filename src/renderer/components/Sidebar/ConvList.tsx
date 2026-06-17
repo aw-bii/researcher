@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useConversations } from '../../../hooks/useConversations'
+import { useConversations } from '../../hooks/useConversations'
 import { ConvItem } from './ConvItem'
 
 interface Props {

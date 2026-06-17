@@ -1,4 +1,4 @@
-import { useMessages } from '../../../hooks/useMessages'
+import { useMessages } from '../../hooks/useMessages'
 import { MessageList } from './MessageList'
 import { InputBar } from './InputBar'
 

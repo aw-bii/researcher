@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { usePersonas } from '../../../hooks/usePersonas'
-import type { Persona } from '../../../../shared/types'
+import { usePersonas } from '../../hooks/usePersonas'
+import type { Persona } from '../../../shared/types'
 
 interface Props {
   activePersonaId: string | null

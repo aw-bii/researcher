@@ -1,4 +1,4 @@
-import { useBackends } from '../../hooks/useBackends'
+import { useBackends } from '../hooks/useBackends'
 
 interface Props {
   value: string
