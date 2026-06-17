@@ -5,9 +5,21 @@ import { ConvStore } from './store'
 import { probeBackend } from './wizard/probe'
 import { installBackend } from './wizard/install'
 
+export const MAX_PROMPT_LENGTH = 100_000
+export const MAX_MESSAGE_LENGTH = 100_000
+
+export function validatePersona(p: { systemPrompt?: string; name?: string }): void {
+  if (p.systemPrompt !== undefined && p.systemPrompt.length > MAX_PROMPT_LENGTH) {
+    throw new Error(`System prompt exceeds maximum length of ${MAX_PROMPT_LENGTH} characters`)
+  }
+}
+
 export function registerIpcHandlers(_win: BrowserWindow): void {
   // chat:send — starts streaming, pushes chat:chunk and chat:done via webContents
   ipcMain.handle(IPC.CHAT_SEND, async (event, { conversationId, message, backend, personaId }) => {
+    if (typeof message !== 'string' || message.length > MAX_MESSAGE_LENGTH) {
+      throw new Error(`Message exceeds maximum length of ${MAX_MESSAGE_LENGTH} characters`)
+    }
     const adapter = AdapterManager.get(backend) ?? AdapterManager.getActive()
     AdapterManager.setActive(adapter.id)
 
@@ -49,8 +61,10 @@ export function registerIpcHandlers(_win: BrowserWindow): void {
 
   ipcMain.handle(IPC.PERSONA_LIST, () => ConvStore.listPersonas())
 
-  ipcMain.handle(IPC.PERSONA_SAVE, (_event, p) =>
-    p.id ? ConvStore.updatePersona(p.id, p) : ConvStore.createPersona(p))
+  ipcMain.handle(IPC.PERSONA_SAVE, (_event, p) => {
+    validatePersona(p)
+    return p.id ? ConvStore.updatePersona(p.id, p) : ConvStore.createPersona(p)
+  })
 
   ipcMain.handle(IPC.PERSONA_DELETE, (_event, { id }) => ConvStore.deletePersona(id))
 
