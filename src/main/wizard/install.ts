@@ -11,7 +11,7 @@ export function installBackend(id: string, onData: (line: string) => void): Prom
 
   const [binary, args] = cmd
   return new Promise(resolve => {
-    const p = spawn(binary, args, { stdio: 'pipe', shell: true })
+    const p = spawn(binary, args, { stdio: 'pipe' })
     p.stdout!.on('data', (buf: Buffer) => buf.toString().split('\n').filter(Boolean).forEach(onData))
     p.stderr!.on('data', (buf: Buffer) => buf.toString().split('\n').filter(Boolean).forEach(onData))
     p.on('close', code => resolve(code === 0))
