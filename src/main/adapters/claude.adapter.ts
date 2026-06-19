@@ -1,5 +1,7 @@
+import fs from 'fs'
 import { spawn, ChildProcess } from 'child_process'
-import type { BackendAdapter, MessageChunk } from '../../shared/types'
+import type { BackendAdapter, MessageChunk, Attachment } from '../../shared/types'
+import { AttachmentService } from '../attachments/service'
 
 export class ClaudeAdapter implements BackendAdapter {
   id = 'claude'
@@ -13,10 +15,29 @@ export class ClaudeAdapter implements BackendAdapter {
     })
   }
 
-  async *send(message: string, persona?: string): AsyncIterable<MessageChunk> {
+  async *send(message: string, persona?: string, attachments?: Attachment[]): AsyncIterable<MessageChunk> {
     const args = ['--output-format', 'stream-json', '--print']
     if (persona) args.push('--system-prompt', persona)
-    args.push('--', message)
+
+    let fullMessage = message
+    if (attachments && attachments.length > 0) {
+      const injections: string[] = []
+      for (const att of attachments) {
+        if (att.extractionError) {
+          injections.push(`[Attachment: ${att.originalName}]\n(extraction failed)\n[/Attachment]`)
+        } else if (!fs.existsSync(att.storedPath)) {
+          console.warn(`[ClaudeAdapter] attachment file not found: ${att.storedPath}, falling back to content injection`)
+          injections.push(`[Attachment: ${att.originalName}]\n${AttachmentService.getContent(att)}\n[/Attachment]`)
+        } else {
+          args.push('--file', att.storedPath)
+        }
+      }
+      if (injections.length > 0) {
+        fullMessage = `${message}\n\n${injections.join('\n\n')}`
+      }
+    }
+
+    args.push('--', fullMessage)
 
     const chunks: MessageChunk[] = []
     let resolve: (() => void) | null = null

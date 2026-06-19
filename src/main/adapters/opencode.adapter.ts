@@ -1,5 +1,6 @@
 import { spawn, ChildProcess } from 'child_process'
-import type { BackendAdapter, MessageChunk } from '../../shared/types'
+import type { BackendAdapter, MessageChunk, Attachment } from '../../shared/types'
+import { AttachmentService } from '../attachments/service'
 
 export class OpencodeAdapter implements BackendAdapter {
   id = 'opencode'
@@ -13,12 +14,21 @@ export class OpencodeAdapter implements BackendAdapter {
     })
   }
 
-  async *send(message: string, persona?: string): AsyncIterable<MessageChunk> {
+  async *send(message: string, persona?: string, attachments?: Attachment[]): AsyncIterable<MessageChunk> {
     // opencode --json flag is unstable; falls back to stdout line parsing
     // NOTE: opencode CLI support for '--' end-of-flags is unconfirmed; applied defensively.
     const args = ['run', '--json']
     if (persona) args.push('--system-prompt', persona)
-    args.push('--', message)
+
+    let fullMessage = message
+    if (attachments && attachments.length > 0) {
+      const injected = attachments.map(a =>
+        `[Attachment: ${a.originalName}]\n${AttachmentService.getContent(a)}\n[/Attachment]`
+      ).join('\n\n')
+      fullMessage = `${message}\n\n${injected}`
+    }
+
+    args.push('--', fullMessage)
 
     const chunks: MessageChunk[] = []
     let resolve: (() => void) | null = null
