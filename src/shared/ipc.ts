@@ -28,6 +28,8 @@ export const IPC = {
   SETTING_SET:     'setting:set',
   SETTING_GET_ALL: 'setting:get-all',
   APP_VERSION:     'app:version',
+  CONV_DELETE:     'conv:delete',
+  CONV_RENAME:     'conv:rename',
 } as const
 
 export type IpcChannels = typeof IPC
@@ -57,6 +59,8 @@ export interface IpcInvokeMap {
   [IPC.SETTING_SET]:     { key: string; value: string }
   [IPC.SETTING_GET_ALL]: void
   [IPC.APP_VERSION]: void
+  [IPC.CONV_DELETE]: { conversationId: string }
+  [IPC.CONV_RENAME]: { conversationId: string; title: string }
 }
 
 export interface IpcPushMap {

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { listConversations, searchConversations } from '../ipc'
 import type { Conversation, Message } from '../../shared/types'
 
-export function useConversations() {
+export function useConversations(refreshKey?: number) {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -13,7 +13,7 @@ export function useConversations() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => { refresh() }, [refresh, refreshKey])
 
   const search = useCallback(async (query: string): Promise<Message[]> => {
     if (!query.trim()) return []

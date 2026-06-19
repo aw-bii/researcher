@@ -5,11 +5,14 @@ import { ConvItem } from './ConvItem'
 interface Props {
   activeId: string | null
   onSelect: (id: string) => void
+  onDelete: (id: string) => void
+  onRename: (id: string, title: string) => void
   searchInputRef?: React.RefObject<HTMLInputElement | null>
+  refreshTrigger?: number
 }
 
-export function ConvList({ activeId, onSelect, searchInputRef }: Props) {
-  const { conversations, search } = useConversations()
+export function ConvList({ activeId, onSelect, onDelete, onRename, searchInputRef, refreshTrigger }: Props) {
+  const { conversations, search } = useConversations(refreshTrigger)
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState<{ conversationId: string }[] | null>(null)
 
@@ -41,6 +44,8 @@ export function ConvList({ activeId, onSelect, searchInputRef }: Props) {
           conversation={conv}
           active={conv.id === activeId}
           onClick={() => onSelect(conv.id)}
+          onDelete={onDelete}
+          onRename={onRename}
         />
       ))}
     </div>

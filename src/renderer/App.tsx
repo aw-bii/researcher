@@ -7,7 +7,7 @@ import { PipelinePanel } from './components/Pipelines/PipelinePanel'
 import { SettingsPanel } from './components/Settings/SettingsPanel'
 import { BackendSwitcher } from './components/BackendSwitcher'
 import { usePipelines } from './hooks/usePipelines'
-import { getConversation, setSetting } from './ipc'
+import { getConversation, setSetting, deleteConversation, renameConversation } from './ipc'
 import type { PipelineTemplate, Conversation } from '../shared/types'
 
 function App() {
@@ -22,6 +22,21 @@ function App() {
   const [showPipelines, setShowPipelines] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const { templates } = usePipelines()
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+  const handleDelete = useCallback(async (id: string) => {
+    await deleteConversation(id)
+    if (activeConvId === id) {
+      setActiveConvId(null)
+      setActiveConvMeta(null)
+    }
+    setRefreshTrigger(n => n + 1)
+  }, [activeConvId])
+
+  const handleRename = useCallback(async (id: string, title: string) => {
+    await renameConversation(id, title)
+    setRefreshTrigger(n => n + 1)
+  }, [])
 
   // Load metadata for active conversation to detect pipeline mode
   useEffect(() => {
@@ -69,7 +84,10 @@ function App() {
         activeId={activeConvId}
         onSelect={id => setActiveConvId(id)}
         onNew={handleNew}
+        onDelete={handleDelete}
+        onRename={handleRename}
         searchInputRef={searchInputRef}
+        refreshTrigger={refreshTrigger}
       />
 
       <div className="flex flex-col flex-1 min-w-0">

@@ -98,6 +98,13 @@ export async function listAttachments(messageId: string): Promise<import('../sha
 export async function getAttachmentDataUrl(storedPath: string): Promise<string> {
   return window.ipc.invoke(IPC.ATTACHMENT_DATA_URL, { storedPath }) as Promise<string>
 }
+export async function deleteConversation(conversationId: string): Promise<void> {
+  await window.ipc.invoke(IPC.CONV_DELETE, { conversationId })
+}
+export async function renameConversation(conversationId: string, title: string): Promise<void> {
+  await window.ipc.invoke(IPC.CONV_RENAME, { conversationId, title })
+}
+
 export async function getAppVersion(): Promise<string> {
   return window.ipc.invoke(IPC.APP_VERSION) as Promise<string>
 }

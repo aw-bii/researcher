@@ -167,6 +167,17 @@ export const ConvStore = {
     getDb().prepare('DELETE FROM pipeline_templates WHERE id = ?').run(id)
   },
 
+  deleteConversation(id: string): void {
+    const db = getDb()
+    db.prepare('DELETE FROM attachments WHERE message_id IN (SELECT id FROM messages WHERE conversation_id = ?)').run(id)
+    db.prepare('DELETE FROM messages WHERE conversation_id = ?').run(id)
+    db.prepare('DELETE FROM conversations WHERE id = ?').run(id)
+  },
+
+  renameConversation(id: string, title: string): void {
+    getDb().prepare('UPDATE conversations SET title = ?, updated_at = ? WHERE id = ?').run(title, Date.now(), id)
+  },
+
   createAttachment(a: Omit<Attachment, 'id' | 'createdAt'>): Attachment {
     const db = getDb()
     const id = crypto.randomUUID()

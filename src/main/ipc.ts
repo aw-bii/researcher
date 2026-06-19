@@ -86,6 +86,15 @@ export function registerIpcHandlers(_win: BrowserWindow): void {
     ConvStore.setSetting('wizard_done', '1')
   })
 
+  ipcMain.handle(IPC.CONV_DELETE, (_event, { conversationId }) => {
+    ConvStore.deleteConversation(conversationId)
+  })
+
+  ipcMain.handle(IPC.CONV_RENAME, (_event, { conversationId, title }) => {
+    if (typeof title !== 'string' || title.trim().length === 0) throw new Error('Title must be a non-empty string')
+    ConvStore.renameConversation(conversationId, title.trim())
+  })
+
   ipcMain.handle(IPC.APP_VERSION, () => app.getVersion())
 
   ipcMain.handle(IPC.SETTING_GET, (_event, { key }) => ConvStore.getSetting(key))
