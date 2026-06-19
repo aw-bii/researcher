@@ -164,7 +164,7 @@ describe('ConvStore attachment CRUD', () => {
     expect(att.id).toBeTruthy()
     expect(att.originalName).toBe('report.pdf')
 
-    const list = ConvStore.listAttachments(msg.id)
+    const list = ConvStore.getAttachmentsForMessage(msg.id)
     expect(list).toHaveLength(1)
     expect(list[0].id).toBe(att.id)
     expect(list[0].extractedText).toBe('some text')
@@ -181,6 +181,15 @@ describe('ConvStore attachment CRUD', () => {
       mimeType: 'application/pdf', sizeBytes: 100, extractedText: null, extractionError: false,
     })
     ConvStore.deleteAttachmentsForMessage(msg.id)
-    expect(ConvStore.listAttachments(msg.id)).toHaveLength(0)
+    expect(ConvStore.getAttachmentsForMessage(msg.id)).toHaveLength(0)
+  })
+
+  it('getAttachmentsForMessage returns all attachments for a message', () => {
+    const conv = ConvStore.createConversation('Test2', 'claude', null)
+    const msg = ConvStore.createMessage({ conversationId: conv.id, role: 'user', content: 'hi', backend: 'claude', stepIndex: null })
+    ConvStore.createAttachment({ messageId: msg.id, originalName: 'a.txt', storedPath: '/tmp/a.txt', mimeType: 'text/plain', sizeBytes: 10 })
+    ConvStore.createAttachment({ messageId: msg.id, originalName: 'b.txt', storedPath: '/tmp/b.txt', mimeType: 'text/plain', sizeBytes: 20 })
+    const atts = ConvStore.getAttachmentsForMessage(msg.id)
+    expect(atts).toHaveLength(2)
   })
 })

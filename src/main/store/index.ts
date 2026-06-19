@@ -173,7 +173,7 @@ export const ConvStore = {
     return { ...a, id, createdAt: now }
   },
 
-  listAttachments(messageId: string): Attachment[] {
+  getAttachmentsForMessage(messageId: string): Attachment[] {
     const rows = getDb().prepare('SELECT * FROM attachments WHERE message_id = ? ORDER BY created_at ASC').all(messageId) as any[]
     return rows.map(r => ({
       id: r.id,
