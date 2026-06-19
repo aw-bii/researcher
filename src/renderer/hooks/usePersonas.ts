@@ -1,25 +1,33 @@
-import { useState, useEffect, useCallback } from 'react'
-import { listPersonas, savePersona, deletePersona } from '../ipc'
-import type { Persona } from '../../shared/types'
+import { useState, useEffect, useCallback } from "react";
+import { listPersonas, savePersona, deletePersona } from "../ipc";
+import type { Persona } from "../../shared/types";
 
 export function usePersonas() {
-  const [personas, setPersonas] = useState<Persona[]>([])
+  const [personas, setPersonas] = useState<Persona[]>([]);
 
   const refresh = useCallback(async () => {
-    setPersonas(await listPersonas())
-  }, [])
+    setPersonas(await listPersonas());
+  }, []);
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
-  const save = useCallback(async (p: Omit<Persona, 'id'> & { id?: string }) => {
-    await savePersona(p)
-    await refresh()
-  }, [refresh])
+  const save = useCallback(
+    async (p: Omit<Persona, "id"> & { id?: string }) => {
+      await savePersona(p);
+      await refresh();
+    },
+    [refresh],
+  );
 
-  const remove = useCallback(async (id: string) => {
-    await deletePersona(id)
-    await refresh()
-  }, [refresh])
+  const remove = useCallback(
+    async (id: string) => {
+      await deletePersona(id);
+      await refresh();
+    },
+    [refresh],
+  );
 
-  return { personas, save, remove, refresh }
+  return { personas, save, remove, refresh };
 }

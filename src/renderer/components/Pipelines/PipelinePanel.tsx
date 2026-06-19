@@ -1,84 +1,101 @@
-import { useState } from 'react'
-import { usePipelines } from '../../hooks/usePipelines'
-import { usePersonas } from '../../hooks/usePersonas'
-import { useBackends } from '../../hooks/useBackends'
-import type { PipelineTemplate, PipelineStep } from '../../../shared/types'
+import { useState } from "react";
+import { usePipelines } from "../../hooks/usePipelines";
+import { usePersonas } from "../../hooks/usePersonas";
+import { useBackends } from "../../hooks/useBackends";
+import type { PipelineTemplate, PipelineStep } from "../../../shared/types";
 
 interface EditingStep {
-  stepOrder: number
-  backendId: string
-  personaId: string | null
+  stepOrder: number;
+  backendId: string;
+  personaId: string | null;
 }
 
 interface EditingTemplate {
-  id?: string
-  name: string
-  steps: EditingStep[]
+  id?: string;
+  name: string;
+  steps: EditingStep[];
 }
 
 interface Props {
-  activeTemplateId: string | null
-  onSelect: (template: PipelineTemplate) => void
+  activeTemplateId: string | null;
+  onSelect: (template: PipelineTemplate) => void;
 }
 
 export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
-  const { templates, save, remove } = usePipelines()
-  const { personas } = usePersonas()
-  const { backends } = useBackends()
-  const [editing, setEditing] = useState<EditingTemplate | null>(null)
+  const { templates, save, remove } = usePipelines();
+  const { personas } = usePersonas();
+  const { backends } = useBackends();
+  const [editing, setEditing] = useState<EditingTemplate | null>(null);
 
   const startNew = () =>
     setEditing({
-      name: '',
+      name: "",
       steps: [
-        { stepOrder: 0, backendId: backends[0]?.id ?? 'claude', personaId: null },
-        { stepOrder: 1, backendId: backends[0]?.id ?? 'claude', personaId: null },
+        {
+          stepOrder: 0,
+          backendId: backends[0]?.id ?? "claude",
+          personaId: null,
+        },
+        {
+          stepOrder: 1,
+          backendId: backends[0]?.id ?? "claude",
+          personaId: null,
+        },
       ],
-    })
+    });
 
-  const cancel = () => setEditing(null)
+  const cancel = () => setEditing(null);
 
   const submit = async () => {
-    if (!editing?.name || editing.steps.length < 2) return
-    await save({ id: editing.id, name: editing.name, steps: editing.steps })
-    setEditing(null)
-  }
+    if (!editing?.name || editing.steps.length < 2) return;
+    await save({ id: editing.id, name: editing.name, steps: editing.steps });
+    setEditing(null);
+  };
 
   const addStep = () => {
-    if (!editing) return
-    setEditing(prev =>
+    if (!editing) return;
+    setEditing((prev) =>
       prev
         ? {
             ...prev,
             steps: [
               ...prev.steps,
-              { stepOrder: prev.steps.length, backendId: backends[0]?.id ?? 'claude', personaId: null },
+              {
+                stepOrder: prev.steps.length,
+                backendId: backends[0]?.id ?? "claude",
+                personaId: null,
+              },
             ],
           }
-        : null
-    )
-  }
+        : null,
+    );
+  };
 
   const removeStep = (idx: number) => {
-    if (!editing || editing.steps.length <= 2) return
-    setEditing(prev =>
+    if (!editing || editing.steps.length <= 2) return;
+    setEditing((prev) =>
       prev
         ? {
             ...prev,
-            steps: prev.steps.filter((_, i) => i !== idx).map((s, i) => ({ ...s, stepOrder: i })),
+            steps: prev.steps
+              .filter((_, i) => i !== idx)
+              .map((s, i) => ({ ...s, stepOrder: i })),
           }
-        : null
-    )
-  }
+        : null,
+    );
+  };
 
   const moveStep = (idx: number, dir: -1 | 1) => {
-    if (!editing) return
-    const steps = [...editing.steps]
-    const target = idx + dir
-    if (target < 0 || target >= steps.length) return
-    ;[steps[idx], steps[target]] = [steps[target], steps[idx]]
-    setEditing({ ...editing, steps: steps.map((s, i) => ({ ...s, stepOrder: i })) })
-  }
+    if (!editing) return;
+    const steps = [...editing.steps];
+    const target = idx + dir;
+    if (target < 0 || target >= steps.length) return;
+    [steps[idx], steps[target]] = [steps[target], steps[idx]];
+    setEditing({
+      ...editing,
+      steps: steps.map((s, i) => ({ ...s, stepOrder: i })),
+    });
+  };
 
   return (
     <div className="p-4 flex flex-col gap-3">
@@ -94,27 +111,30 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
 
       {templates.length === 0 ? (
         <div className="text-center text-xs text-gray-400 py-4">
-          No pipeline templates yet. Create one to chain multiple backends in sequence.
+          No pipeline templates yet. Create one to chain multiple backends in
+          sequence.
         </div>
       ) : (
-        templates.map(t => (
+        templates.map((t) => (
           <div
             key={t.id}
             className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-sm ${
               activeTemplateId === t.id
-                ? 'bg-blue-100 dark:bg-blue-900'
-                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                ? "bg-blue-100 dark:bg-blue-900"
+                : "hover:bg-gray-100 dark:hover:bg-gray-800"
             }`}
             onClick={() => onSelect(t)}
           >
             <div>
               <div className="font-medium">{t.name}</div>
-              <div className="text-xs text-gray-400">{t.steps.length} steps</div>
+              <div className="text-xs text-gray-400">
+                {t.steps.length} steps
+              </div>
             </div>
             <div className="flex gap-1">
               <button
-                onClick={e => {
-                  e.stopPropagation()
+                onClick={(e) => {
+                  e.stopPropagation();
                   setEditing({
                     id: t.id,
                     name: t.name,
@@ -123,16 +143,16 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                       backendId: s.backendId,
                       personaId: s.personaId,
                     })),
-                  })
+                  });
                 }}
                 className="text-xs text-gray-400 hover:text-gray-700 px-1"
               >
                 Edit
               </button>
               <button
-                onClick={e => {
-                  e.stopPropagation()
-                  remove(t.id)
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(t.id);
                 }}
                 className="text-xs text-red-400 hover:text-red-600 px-1"
               >
@@ -149,7 +169,11 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
             className="text-sm border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
             placeholder="Template name"
             value={editing.name}
-            onChange={e => setEditing(prev => (prev ? { ...prev, name: e.target.value } : null))}
+            onChange={(e) =>
+              setEditing((prev) =>
+                prev ? { ...prev, name: e.target.value } : null,
+              )
+            }
           />
 
           <div className="flex flex-col gap-1">
@@ -159,16 +183,16 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                 <select
                   className="text-xs border rounded px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
                   value={step.backendId}
-                  onChange={e =>
-                    setEditing(prev => {
-                      if (!prev) return null
-                      const steps = [...prev.steps]
-                      steps[idx] = { ...steps[idx], backendId: e.target.value }
-                      return { ...prev, steps }
+                  onChange={(e) =>
+                    setEditing((prev) => {
+                      if (!prev) return null;
+                      const steps = [...prev.steps];
+                      steps[idx] = { ...steps[idx], backendId: e.target.value };
+                      return { ...prev, steps };
                     })
                   }
                 >
-                  {backends.map(b => (
+                  {backends.map((b) => (
                     <option key={b.id} value={b.id}>
                       {b.label}
                     </option>
@@ -176,18 +200,21 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                 </select>
                 <select
                   className="text-xs border rounded px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
-                  value={step.personaId ?? ''}
-                  onChange={e =>
-                    setEditing(prev => {
-                      if (!prev) return null
-                      const steps = [...prev.steps]
-                      steps[idx] = { ...steps[idx], personaId: e.target.value || null }
-                      return { ...prev, steps }
+                  value={step.personaId ?? ""}
+                  onChange={(e) =>
+                    setEditing((prev) => {
+                      if (!prev) return null;
+                      const steps = [...prev.steps];
+                      steps[idx] = {
+                        ...steps[idx],
+                        personaId: e.target.value || null,
+                      };
+                      return { ...prev, steps };
                     })
                   }
                 >
                   <option value="">No persona</option>
-                  {personas.map(p => (
+                  {personas.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
                     </option>
@@ -241,5 +268,5 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
         </div>
       )}
     </div>
-  )
+  );
 }

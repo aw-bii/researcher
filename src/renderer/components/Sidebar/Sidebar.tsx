@@ -1,16 +1,24 @@
-import { ConvList } from './ConvList'
+import { ConvList } from "./ConvList";
 
 interface Props {
-  activeId: string | null
-  onSelect: (id: string) => void
-  onNew: () => void
-  onDelete: (id: string) => void
-  onRename: (id: string, title: string) => void
-  searchInputRef?: React.MutableRefObject<HTMLInputElement | null>
-  refreshTrigger?: number
+  activeId: string | null;
+  onSelect: (id: string) => void;
+  onNew: () => void;
+  onDelete: (id: string) => void;
+  onRename: (id: string, title: string) => void;
+  searchInputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  refreshTrigger?: number;
 }
 
-export function Sidebar({ activeId, onSelect, onNew, onDelete, onRename, searchInputRef, refreshTrigger }: Props) {
+export function Sidebar({
+  activeId,
+  onSelect,
+  onNew,
+  onDelete,
+  onRename,
+  searchInputRef,
+  refreshTrigger,
+}: Props) {
   return (
     <div className="w-64 flex flex-col h-full border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -23,8 +31,15 @@ export function Sidebar({ activeId, onSelect, onNew, onDelete, onRename, searchI
         </button>
       </div>
       <div className="flex-1 overflow-y-auto py-2 px-2">
-        <ConvList activeId={activeId} onSelect={onSelect} onDelete={onDelete} onRename={onRename} searchInputRef={searchInputRef} refreshTrigger={refreshTrigger} />
+        <ConvList
+          activeId={activeId}
+          onSelect={onSelect}
+          onDelete={onDelete}
+          onRename={onRename}
+          searchInputRef={searchInputRef}
+          refreshTrigger={refreshTrigger}
+        />
       </div>
     </div>
-  )
+  );
 }
