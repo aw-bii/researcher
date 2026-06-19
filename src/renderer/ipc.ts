@@ -1,6 +1,6 @@
 import { IPC } from '../shared/ipc'
 import type { IpcInvokeMap } from '../shared/ipc'
-import type { Conversation, Message, Persona, BackendInfo, MessageChunk } from '../shared/types'
+import type { Conversation, Message, Persona, BackendInfo, MessageChunk, PipelineTemplate, PipelineChunk } from '../shared/types'
 
 // window.ipc is injected by preload/index.ts via contextBridge
 declare global {
@@ -53,4 +53,37 @@ export async function installBackend(backend: string): Promise<boolean> {
 }
 export async function markWizardDone(): Promise<void> {
   await window.ipc.invoke(IPC.WIZARD_DONE)
+}
+
+export async function listPipelineTemplates(): Promise<PipelineTemplate[]> {
+  return window.ipc.invoke(IPC.PIPELINE_LIST) as Promise<PipelineTemplate[]>
+}
+export async function savePipelineTemplate(p: {
+  id?: string
+  name: string
+  steps: Array<{ id?: string; stepOrder: number; backendId: string; personaId: string | null }>
+}): Promise<PipelineTemplate> {
+  return window.ipc.invoke(IPC.PIPELINE_SAVE, p) as Promise<PipelineTemplate>
+}
+export async function deletePipelineTemplate(id: string): Promise<void> {
+  await window.ipc.invoke(IPC.PIPELINE_DELETE, { id })
+}
+export async function runPipeline(payload: {
+  conversationId: string | null
+  message: string
+  templateId: string
+}): Promise<string> {
+  return window.ipc.invoke(IPC.PIPELINE_RUN, payload) as Promise<string>
+}
+export async function abortPipeline(conversationId: string): Promise<void> {
+  await window.ipc.invoke(IPC.PIPELINE_ABORT, { conversationId })
+}
+export function onPipelineChunk(cb: (chunk: PipelineChunk & { conversationId: string }) => void) {
+  return window.ipc.on(IPC.PIPELINE_CHUNK, cb as any)
+}
+export function onPipelineStepDone(cb: (payload: { conversationId: string; stepIndex: number }) => void) {
+  return window.ipc.on(IPC.PIPELINE_STEP_DONE, cb as any)
+}
+export function onPipelineDone(cb: (payload: { conversationId: string }) => void) {
+  return window.ipc.on(IPC.PIPELINE_DONE, cb as any)
 }
