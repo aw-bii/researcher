@@ -216,5 +216,14 @@ function rowToMsg(r: any): Message {
   }
 }
 function rowToPersona(r: any): Persona {
-  return { id: r.id, name: r.name, systemPrompt: r.system_prompt, isDefault: r.is_default === 1 }
+  return {
+    id: r.id,
+    name: r.name,
+    systemPrompt: r.system_prompt,
+    isDefault: r.is_default === 1,
+    isTemplate: r.is_template === 1,
+    category: r.category ?? null,
+    description: r.description ?? null,
+    variables: JSON.parse(r.variables ?? '[]'),
+  }
 }

@@ -18,11 +18,22 @@ export interface Message {
   createdAt: number
 }
 
+export interface VariableDef {
+  name: string
+  label: string
+  placeholder: string
+  required: boolean
+}
+
 export interface Persona {
   id: string
   name: string
   systemPrompt: string
   isDefault: boolean
+  isTemplate?: boolean
+  category?: string | null
+  description?: string | null
+  variables?: VariableDef[]
 }
 
 export interface BackendInfo {
