@@ -103,7 +103,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
         <h3 className="font-semibold text-sm">Personas</h3>
         <button
           onClick={startNew}
-          className="text-xs px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
         >
           + New
         </button>
@@ -117,7 +117,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
           </h4>
           {categories.map(([cat, catTemplates]) => (
             <details key={cat} className="group" open>
-              <summary className="text-xs font-medium text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
+              <summary className="text-xs font-medium text-gray-500 cursor-pointer hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-300">
                 {cat}
               </summary>
               <div className="flex flex-col gap-1 mt-1">
@@ -126,7 +126,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
                     key={t.id}
                     role="button"
                     tabIndex={0}
-                    className="flex items-center justify-between p-2 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                    className="flex items-center justify-between p-2 rounded-lg text-sm hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 cursor-pointer transition-transform duration-100 ease-press active:scale-95"
                     onClick={() => startTemplateCreate(t)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ")
@@ -174,7 +174,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
               </label>
               <input
                 id={`var-${v.name}`}
-                className="text-sm border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
+                className="text-sm border rounded-lg px-2 py-1.5 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={v.placeholder}
                 value={variableValues[v.name] ?? ""}
                 onChange={(e) =>
@@ -189,7 +189,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
           <div className="flex gap-2 mt-1">
             <button
               onClick={submitFromTemplate}
-              className="flex-1 text-sm py-1 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="btn-md flex-1 bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
               disabled={(creatingFromTemplate.variables ?? []).some(
                 (v) => v.required && !variableValues[v.name],
               )}
@@ -198,7 +198,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
             </button>
             <button
               onClick={cancel}
-              className="flex-1 text-sm py-1 rounded border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+              className="btn-md flex-1 border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-50 dark:hoverable:hover:bg-gray-800"
             >
               Cancel
             </button>
@@ -215,7 +215,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
       <div
         role="button"
         tabIndex={0}
-        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer text-sm ${activePersonaId === null ? "bg-blue-100 dark:bg-blue-900" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === null ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
         onClick={() => onSelect(null)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") onSelect(null);
@@ -235,7 +235,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
           key={p.id}
           role="button"
           tabIndex={0}
-          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-sm ${activePersonaId === p.id ? "bg-blue-100 dark:bg-blue-900" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === p.id ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
           onClick={() => onSelect(p.id)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") onSelect(p.id);
@@ -253,7 +253,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
                 e.stopPropagation();
                 setEditing(p);
               }}
-              className="text-xs text-gray-400 hover:text-gray-700 px-1"
+              className="text-xs text-gray-400 hoverable:hover:text-gray-700 px-1"
             >
               Edit
             </button>
@@ -262,7 +262,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
                 e.stopPropagation();
                 remove(p.id);
               }}
-              className="text-xs text-red-400 hover:text-red-600 px-1"
+              className="text-xs text-red-400 hoverable:hover:text-red-600 px-1"
             >
               Del
             </button>
@@ -274,7 +274,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
       {editing && !creatingFromTemplate && (
         <div className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3">
           <input
-            className="text-sm border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
+            className="text-sm border rounded-lg px-2 py-1.5 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Name"
             value={editing.name ?? ""}
             onChange={(e) =>
@@ -282,7 +282,7 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
             }
           />
           <textarea
-            className="text-sm border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 resize-none"
+            className="text-sm border rounded-lg px-2 py-1.5 dark:bg-gray-800 dark:border-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="System prompt..."
             rows={3}
             value={editing.systemPrompt ?? ""}
@@ -303,13 +303,13 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
           <div className="flex gap-2">
             <button
               onClick={submit}
-              className="flex-1 text-sm py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+              className="btn-md flex-1 bg-blue-600 text-white hoverable:hover:bg-blue-700"
             >
               Save
             </button>
             <button
               onClick={cancel}
-              className="flex-1 text-sm py-1 rounded border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+              className="btn-md flex-1 border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-50 dark:hoverable:hover:bg-gray-800"
             >
               Cancel
             </button>

@@ -59,7 +59,7 @@ export function WizardStep3({ statuses: initial, onComplete }: Props) {
           <button
             onClick={() => recheck(s.id)}
             disabled={s.loading}
-            className="text-sm py-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
+            className="btn-md w-full bg-gray-200 dark:bg-gray-700 hoverable:hover:bg-gray-300 dark:hoverable:hover:bg-gray-600 disabled:opacity-50"
           >
             {s.loading ? "Checking..." : "Recheck"}
           </button>
@@ -67,7 +67,7 @@ export function WizardStep3({ statuses: initial, onComplete }: Props) {
       ))}
       <button
         onClick={onComplete}
-        className="py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+        className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
       >
         Finish Setup
       </button>

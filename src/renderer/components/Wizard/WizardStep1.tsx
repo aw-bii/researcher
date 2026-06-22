@@ -77,7 +77,7 @@ export function WizardStep1({ onNext }: Props) {
       <button
         onClick={() => onNext(statuses)}
         disabled={statuses.some((s) => s.loading)}
-        className="py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+        className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
       >
         Next
       </button>

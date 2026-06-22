@@ -136,13 +136,13 @@ function App() {
                 setMode("single");
                 setSelectedTemplate(null);
               }}
-              className={`px-3 py-1 ${mode === "single" ? "bg-blue-600 text-white" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+              className={`px-3 py-1 transition-transform duration-100 ease-press active:scale-95 ${mode === "single" ? "bg-blue-600 text-white" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
             >
               Single
             </button>
             <button
               onClick={() => setMode("pipeline")}
-              className={`px-3 py-1 ${mode === "pipeline" ? "bg-blue-600 text-white" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+              className={`px-3 py-1 transition-transform duration-100 ease-press active:scale-95 ${mode === "pipeline" ? "bg-blue-600 text-white" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
             >
               Pipeline
             </button>
@@ -176,7 +176,7 @@ function App() {
               setShowPersonas((v) => !v);
               setShowPipelines(false);
             }}
-            className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 ml-auto"
+            className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 ml-auto"
           >
             Personas
           </button>
@@ -185,13 +185,13 @@ function App() {
               setShowPipelines((v) => !v);
               setShowPersonas(false);
             }}
-            className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
           >
             Pipelines
           </button>
           <button
             onClick={() => setShowSettings((v) => !v)}
-            className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
             aria-label="Settings"
           >
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
@@ -229,7 +229,7 @@ function App() {
               </p>
               <button
                 onClick={handleNew}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700"
+                className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hoverable:hover:bg-blue-700 transition-transform duration-100 ease-press active:scale-95"
               >
                 Start a conversation
               </button>
@@ -246,16 +246,24 @@ function App() {
               }}
             />
           )}
-          {showPersonas && (
-            <div className="w-72 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+          <div
+            className={`overflow-hidden border-l border-gray-200 dark:border-gray-700 transition-all duration-200 ease-press ${
+              showPersonas ? "w-72 opacity-100" : "w-0 opacity-0"
+            }`}
+          >
+            <div className="w-72 overflow-y-auto h-full">
               <PersonaPanel
                 activePersonaId={personaId}
                 onSelect={setPersonaId}
               />
             </div>
-          )}
-          {showPipelines && (
-            <div className="w-72 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+          </div>
+          <div
+            className={`overflow-hidden border-l border-gray-200 dark:border-gray-700 transition-all duration-200 ease-press ${
+              showPipelines ? "w-72 opacity-100" : "w-0 opacity-0"
+            }`}
+          >
+            <div className="w-72 overflow-y-auto h-full">
               <PipelinePanel
                 activeTemplateId={activePipelineTemplate?.id ?? null}
                 onSelect={(t) => {
@@ -264,8 +272,12 @@ function App() {
                 }}
               />
             </div>
-          )}
-          {showSettings && (
+          </div>
+          <div
+            className={`overflow-hidden border-l border-gray-200 dark:border-gray-700 transition-all duration-200 ease-press ${
+              showSettings ? "w-72 opacity-100" : "w-0 opacity-0"
+            }`}
+          >
             <SettingsPanel
               onClose={() => setShowSettings(false)}
               onReRunWizard={() => {
@@ -274,7 +286,7 @@ function App() {
                 setSetting("wizard_done", "0");
               }}
             />
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -38,7 +38,7 @@ export function WizardStep2({ missing, onNext }: Props) {
         <h2 className="text-xl font-semibold">All backends available</h2>
         <button
           onClick={onNext}
-          className="py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+          className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
         >
           Next
         </button>
@@ -66,7 +66,7 @@ export function WizardStep2({ missing, onNext }: Props) {
             <button
               onClick={() => install(id)}
               disabled={installing[id] || done[id]}
-              className="text-xs px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
             >
               {done[id]
                 ? "Installed ✓"
@@ -84,7 +84,7 @@ export function WizardStep2({ missing, onNext }: Props) {
       ))}
       <button
         onClick={onNext}
-        className="py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+        className="py-2 rounded-xl bg-blue-600 text-white font-medium hoverable:hover:bg-blue-700 transition-transform duration-100 ease-press active:scale-95"
       >
         Continue
       </button>

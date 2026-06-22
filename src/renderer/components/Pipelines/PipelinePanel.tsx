@@ -103,7 +103,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
         <h3 className="font-semibold text-sm">Pipelines</h3>
         <button
           onClick={startNew}
-          className="text-xs px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
         >
           + New
         </button>
@@ -121,7 +121,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
             className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-sm ${
               activeTemplateId === t.id
                 ? "bg-blue-100 dark:bg-blue-900"
-                : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
             }`}
             onClick={() => onSelect(t)}
           >
@@ -145,7 +145,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                     })),
                   });
                 }}
-                className="text-xs text-gray-400 hover:text-gray-700 px-1"
+                className="text-xs text-gray-400 hoverable:hover:text-gray-700 px-1"
               >
                 Edit
               </button>
@@ -154,7 +154,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                   e.stopPropagation();
                   remove(t.id);
                 }}
-                className="text-xs text-red-400 hover:text-red-600 px-1"
+                className="text-xs text-red-400 hoverable:hover:text-red-600 px-1"
               >
                 Del
               </button>
@@ -166,7 +166,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
       {editing && (
         <div className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3">
           <input
-            className="text-sm border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
+            className="text-sm border rounded-lg px-2 py-1.5 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Template name"
             value={editing.name}
             onChange={(e) =>
@@ -181,7 +181,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
               <div key={idx} className="flex items-center gap-1">
                 <span className="text-xs text-gray-400 w-4">{idx + 1}.</span>
                 <select
-                  className="text-xs border rounded px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
+                  className="text-xs border rounded-lg px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
                   value={step.backendId}
                   onChange={(e) =>
                     setEditing((prev) => {
@@ -199,7 +199,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                   ))}
                 </select>
                 <select
-                  className="text-xs border rounded px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
+                  className="text-xs border rounded-lg px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
                   value={step.personaId ?? ""}
                   onChange={(e) =>
                     setEditing((prev) => {
@@ -222,20 +222,20 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
                 </select>
                 <button
                   onClick={() => moveStep(idx, -1)}
-                  className="text-xs text-gray-400 hover:text-gray-600 px-1"
+                  className="text-xs text-gray-400 hoverable:hover:text-gray-600 px-1"
                 >
                   ↑
                 </button>
                 <button
                   onClick={() => moveStep(idx, 1)}
-                  className="text-xs text-gray-400 hover:text-gray-600 px-1"
+                  className="text-xs text-gray-400 hoverable:hover:text-gray-600 px-1"
                 >
                   ↓
                 </button>
                 <button
                   onClick={() => removeStep(idx)}
                   disabled={editing.steps.length <= 2}
-                  className="text-xs text-red-400 hover:text-red-600 px-1 disabled:opacity-30"
+                  className="text-xs text-red-400 hoverable:hover:text-red-600 px-1 disabled:opacity-30"
                 >
                   ×
                 </button>
@@ -245,7 +245,7 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
 
           <button
             onClick={addStep}
-            className="text-xs text-blue-500 hover:text-blue-700 text-left"
+            className="text-xs text-blue-500 hoverable:hover:text-blue-700 text-left transition-transform duration-100 ease-press active:scale-95"
           >
             + Add step
           </button>
@@ -254,13 +254,13 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
             <button
               onClick={submit}
               disabled={!editing.name || editing.steps.length < 2}
-              className="flex-1 text-sm py-1 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="btn-md flex-1 bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
             >
               Save
             </button>
             <button
               onClick={cancel}
-              className="flex-1 text-sm py-1 rounded border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
+              className="btn-md flex-1 border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-50 dark:hoverable:hover:bg-gray-800"
             >
               Cancel
             </button>

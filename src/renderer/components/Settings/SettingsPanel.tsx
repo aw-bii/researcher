@@ -40,7 +40,7 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
         <span className="font-semibold text-sm">Settings</span>
         <button
           onClick={onClose}
-          className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
         >
           Close
         </button>
@@ -61,7 +61,7 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
         <div>
           <button
             onClick={onReRunWizard}
-            className="text-xs w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="btn-sm w-full px-3 py-2 border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
           >
             Re-run Setup Wizard
           </button>

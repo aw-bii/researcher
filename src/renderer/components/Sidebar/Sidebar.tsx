@@ -25,7 +25,7 @@ export function Sidebar({
         <span className="font-semibold text-sm">BII Agent Harness</span>
         <button
           onClick={onNew}
-          className="text-xs px-2 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
         >
           + New
         </button>
