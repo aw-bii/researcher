@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { SecurityEvent } from "../../../shared/types";
 
 interface SecurityDialogProps {
@@ -9,19 +9,42 @@ interface SecurityDialogProps {
 export function SecurityDialog({ event, onRespond }: SecurityDialogProps) {
   const [resolved, setResolved] = useState(false);
 
+  useEffect(() => {
+    setResolved(false);
+  }, [event]);
+
+  const onKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setResolved(true);
+      if (event.type !== "write_approval_needed") {
+        onRespond(false);
+      }
+    }
+  }, [event, onRespond]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
+
   if (resolved) return null;
 
   const severityColors: Record<string, string> = {
-    low: "bg-yellow-50 border-yellow-200 text-yellow-800",
-    medium: "bg-orange-50 border-orange-200 text-orange-800",
-    high: "bg-red-50 border-red-200 text-red-800",
-    critical: "bg-red-100 border-red-400 text-red-900",
+    low: "bg-yellow-50 dark:bg-yellow-900/50 border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200",
+    medium: "bg-orange-50 dark:bg-orange-900/50 border-orange-200 dark:border-orange-700 text-orange-800 dark:text-orange-200",
+    high: "bg-red-50 dark:bg-red-900/50 border-red-200 dark:border-red-700 text-red-800 dark:text-red-200",
+    critical: "bg-red-100 dark:bg-red-900/70 border-red-400 dark:border-red-600 text-red-900 dark:text-red-100",
   };
 
   const severityClass = severityColors[event.severity] ?? severityColors.medium;
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${event.severity} security alert: ${event.message}`}
+    >
       <div className={`max-w-md w-full mx-4 rounded-lg border p-4 shadow-lg ${severityClass}`}>
         <div className="font-semibold mb-1 text-sm uppercase tracking-wide">
           {event.severity} — Security Alert
