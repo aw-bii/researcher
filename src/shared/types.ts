@@ -91,3 +91,23 @@ export interface Attachment {
   extractionError: boolean;
   createdAt: number;
 }
+
+export interface SecurityEvent {
+  type: "injection_detected" | "write_approval_needed" | "path_traversal_blocked";
+  severity: "low" | "medium" | "high" | "critical";
+  message: string;
+  detail: string;
+  source: string;
+  filePath?: string;
+  content?: string;
+}
+
+export interface WriteApprovalRequest {
+  filePath: string;
+  content: string;
+}
+
+export interface SecurityRespondPayload {
+  eventType: SecurityEvent["type"];
+  approved: boolean;
+}
