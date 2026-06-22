@@ -42,5 +42,32 @@ describe("WriteApproval", () => {
       WriteApproval.queue("/tmp/b", "2");
       expect(WriteApproval.pendingCount()).toBe(2);
     });
+
+    it("throws when responding to non-existent id", () => {
+      expect(() => WriteApproval.respond("nonexistent", true)).toThrow();
+    });
+
+    it("getPending returns queued items", () => {
+      WriteApproval.queue("/tmp/a", "content a");
+      WriteApproval.queue("/tmp/b", "content b");
+      const pending = WriteApproval.getPending();
+      expect(pending.length).toBe(2);
+      expect(pending.some((p) => p.filePath === "/tmp/a")).toBe(true);
+      expect(pending.some((p) => p.filePath === "/tmp/b")).toBe(true);
+    });
+
+    it("cancel removes a pending request", () => {
+      const id = WriteApproval.queue("/tmp/test.txt", "hello");
+      expect(WriteApproval.pendingCount()).toBe(1);
+      WriteApproval.cancel(id);
+      expect(WriteApproval.pendingCount()).toBe(0);
+    });
+
+    it("reset clears all pending requests", () => {
+      WriteApproval.queue("/tmp/a", "1");
+      WriteApproval.queue("/tmp/b", "2");
+      WriteApproval.reset();
+      expect(WriteApproval.pendingCount()).toBe(0);
+    });
   });
 });

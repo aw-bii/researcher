@@ -6,7 +6,7 @@ interface PendingRequest {
   content: string;
   resolve: (result: ApprovalResult) => void;
   promise: Promise<ApprovalResult>;
-  timer: ReturnType<typeof setTimeout>;
+  timer?: ReturnType<typeof setTimeout>;
 }
 
 export interface ApprovalResult {
@@ -26,23 +26,15 @@ export const WriteApproval = {
       resolve = r;
     });
 
-    const entry: PendingRequest = {
-      id,
-      filePath,
-      content,
-      resolve: resolve!,
-      promise,
-      timer: undefined!,
-    };
-    pending.set(id, entry);
-
-    entry.timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       const e = pending.get(id);
       if (e) {
         pending.delete(id);
         e.resolve({ approved: false, filePath, reason: "timeout" });
       }
     }, timeoutMs);
+
+    pending.set(id, { id, filePath, content, resolve: resolve!, promise, timer });
 
     return id;
   },
