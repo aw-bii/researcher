@@ -24,6 +24,7 @@ export const PathSecurity = {
   isPathTraversal(input: string): boolean {
     const normalized = normalizeSlashes(input);
     if (path.isAbsolute(normalized)) return true;
+    if (/^[A-Za-z]:[/\\]/.test(input)) return true;
     for (const re of TRAVERSAL_PATTERNS) {
       if (re.test(normalized)) return true;
     }
