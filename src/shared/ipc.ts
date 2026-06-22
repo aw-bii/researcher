@@ -24,6 +24,8 @@ export const IPC = {
   ATTACHMENT_INGEST: "attachment:ingest",
   ATTACHMENT_LIST: "attachment:list",
   ATTACHMENT_DATA_URL: "attachment:dataurl",
+  SECURITY_EVENT: "security:event",
+  SECURITY_RESPOND: "security:respond",
   SETTING_GET: "setting:get",
   SETTING_SET: "setting:set",
   SETTING_GET_ALL: "setting:get-all",
@@ -91,6 +93,7 @@ export interface IpcInvokeMap {
   [IPC.SETTING_GET_ALL]: void;
   [IPC.APP_VERSION]: void;
   [IPC.CONV_DELETE]: { conversationId: string };
+  [IPC.SECURITY_RESPOND]: import("./types").SecurityRespondPayload;
   [IPC.CONV_RENAME]: { conversationId: string; title: string };
   [IPC.UPDATE_DOWNLOAD]: void;
   [IPC.UPDATE_INSTALL]: void;
@@ -109,4 +112,5 @@ export interface IpcPushMap {
   [IPC.UPDATE_PROGRESS]: number;
   [IPC.UPDATE_ERROR]: string;
   [IPC.UPDATE_DOWNLOADED]: void;
+  [IPC.SECURITY_EVENT]: import("./types").SecurityEvent;
 }

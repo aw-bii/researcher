@@ -8,6 +8,8 @@ import type {
   MessageChunk,
   PipelineTemplate,
   PipelineChunk,
+  SecurityEvent,
+  SecurityRespondPayload,
 } from "../shared/types";
 
 // window.ipc is injected by preload/index.ts via contextBridge
@@ -181,4 +183,18 @@ export async function getAllSettings(): Promise<Record<string, string>> {
   return window.ipc.invoke(IPC.SETTING_GET_ALL) as Promise<
     Record<string, string>
   >;
+}
+
+export function onSecurityEvent(
+  listener: (event: SecurityEvent) => void,
+): () => void {
+  return window.ipc.on("security:event", (_event: unknown, data: unknown) => {
+    listener(data as SecurityEvent);
+  });
+}
+
+export async function respondSecurity(
+  payload: SecurityRespondPayload,
+): Promise<void> {
+  await window.ipc.invoke("security:respond", payload);
 }
