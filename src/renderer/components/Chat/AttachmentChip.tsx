@@ -17,7 +17,7 @@ export function AttachmentChip({ name, attachmentId, onRemove }: Props) {
       <span className="truncate">{name}</span>
       <button
         onClick={() => onRemove(attachmentId)}
-        className="ml-1 text-gray-400 hover:text-red-500 flex-shrink-0"
+        className="ml-1 text-gray-400 hoverable:hover:text-red-500 flex-shrink-0 transition-transform duration-100 ease-press active:scale-95"
         aria-label="Remove attachment"
       >
         ×

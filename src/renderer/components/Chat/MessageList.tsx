@@ -16,8 +16,14 @@ export function MessageList({ messages, streaming }: Props) {
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-4">
-      {messages.map((msg) => (
-        <MessageBubble key={msg.id} message={msg} />
+      {messages.map((msg, i) => (
+        <div
+          key={msg.id}
+          className="animate-fade-in-up"
+          style={{ animationDelay: `${Math.min(i * 30, 500)}ms` }}
+        >
+          <MessageBubble message={msg} />
+        </div>
       ))}
       {streaming && (
         <div className="flex justify-start mb-3">

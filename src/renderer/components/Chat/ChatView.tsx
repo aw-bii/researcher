@@ -108,10 +108,10 @@ function PipelineChatView({
           <button
             key={i}
             onClick={() => !streaming && setActiveTabIndex(i)}
-            className={`px-3 py-2 text-xs whitespace-nowrap border-b-2 transition-colors ${
+            className={`px-3 py-2 text-xs whitespace-nowrap border-b-2 transition-colors transition-transform duration-100 ease-press active:scale-95 ${
               activeTabIndex === i
                 ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                : "border-transparent text-gray-500 hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-300"
             } ${streaming && streamingStepIndex !== i ? "opacity-50" : ""}`}
           >
             {step.backendId}
