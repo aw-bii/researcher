@@ -21,6 +21,7 @@ describe("SecurityEvent types", () => {
       source: "opencode",
       severity: "high",
       message: "File write requires approval",
+      detail: "Write to system file",
     };
     expect(injection.type).toBe("injection_detected");
     expect(approval.type).toBe("write_approval_needed");

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useConversations } from "../../hooks/useConversations";
 import { ConvItem } from "./ConvItem";
+import type { SearchResult } from "../../../shared/types";
 
 interface Props {
   activeId: string | null;
@@ -22,7 +23,7 @@ export function ConvList({
   const { conversations, search } = useConversations(refreshTrigger);
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState<
-    { conversationId: string }[] | null
+    SearchResult[] | null
   >(null);
 
   const handleSearch = async (q: string) => {
@@ -37,7 +38,7 @@ export function ConvList({
 
   const displayed = searchResults
     ? conversations.filter((c) =>
-        searchResults.some((r) => r.conversationId === c.id),
+        searchResults.some((r) => r.message.conversationId === c.id),
       )
     : conversations;
 
