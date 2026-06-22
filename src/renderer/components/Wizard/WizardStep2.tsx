@@ -84,7 +84,7 @@ export function WizardStep2({ missing, onNext }: Props) {
       ))}
       <button
         onClick={onNext}
-        className="py-2 rounded-xl bg-blue-600 text-white font-medium hoverable:hover:bg-blue-700 transition-transform duration-100 ease-press active:scale-95"
+        className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
       >
         Continue
       </button>
