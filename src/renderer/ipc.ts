@@ -188,7 +188,7 @@ export async function getAllSettings(): Promise<Record<string, string>> {
 export function onSecurityEvent(
   listener: (event: SecurityEvent) => void,
 ): () => void {
-  return window.ipc.on("security:event", (_event: unknown, data: unknown) => {
+  return window.ipc.on(IPC.SECURITY_EVENT, (_event: unknown, data: unknown) => {
     listener(data as SecurityEvent);
   });
 }
@@ -196,5 +196,5 @@ export function onSecurityEvent(
 export async function respondSecurity(
   payload: SecurityRespondPayload,
 ): Promise<void> {
-  await window.ipc.invoke("security:respond", payload);
+  await window.ipc.invoke(IPC.SECURITY_RESPOND, payload);
 }

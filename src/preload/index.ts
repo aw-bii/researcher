@@ -4,8 +4,6 @@ import { IPC } from "../shared/ipc";
 const ALLOWED_CHANNELS = new Set([
   ...Object.values(IPC),
   "wizard:install:line",
-  "security:event",
-  "security:respond",
 ]);
 
 contextBridge.exposeInMainWorld("ipc", {
