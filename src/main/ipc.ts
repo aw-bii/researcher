@@ -11,6 +11,9 @@ import { CronStore } from "./scheduler/cron-store";
 import { CronEngine } from "./scheduler/cron-engine";
 import { McpClientManager } from "./mcp/mcp-client-manager";
 import { PluginManager } from "./plugins/plugin-manager";
+import { PathSecurity } from "./security/path-security";
+import { WriteApproval } from "./security/write-approval";
+import cron from "node-cron";
 import path from "path";
 
 export const MAX_PROMPT_LENGTH = 100_000;
@@ -294,11 +297,23 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   });
 
   ipcMain.handle(IPC.ATTACHMENT_DATA_URL, (_event, { storedPath }) => {
-    return AttachmentService.getDataUrl(storedPath);
+    const userData = app.getPath("userData");
+    const check = PathSecurity.resolveSafePath(storedPath, [
+      path.join(userData, "attachments"),
+    ]);
+    if (!check.allowed) {
+      throw new Error(`Access denied: ${check.reason}`);
+    }
+    return AttachmentService.getDataUrl(check.resolvedPath);
   });
 
-  ipcMain.handle(IPC.SECURITY_RESPOND, (_event, _payload) => {
-    // Security respond handler — placeholder for now, wired fully in Task 8
+  ipcMain.handle(IPC.SECURITY_RESPOND, (_event, { id, approved }) => {
+    if (typeof id !== "string" || typeof approved !== "boolean") {
+      throw new Error(
+        "SECURITY_RESPOND requires { id: string, approved: boolean }",
+      );
+    }
+    WriteApproval.respond(id, approved);
   });
 
   ipcMain.handle(IPC.UPDATE_DOWNLOAD, () => downloadUpdate());
@@ -306,11 +321,31 @@ export function registerIpcHandlers(win: BrowserWindow): void {
 
   ipcMain.handle(IPC.CRON_LIST, () => CronStore.list());
   ipcMain.handle(IPC.CRON_CREATE, (_event, input) => {
+    if (
+      typeof input?.cronExpression !== "string" ||
+      !cron.validate(input.cronExpression)
+    ) {
+      throw new Error(`Invalid cron expression: "${input?.cronExpression}"`);
+    }
+    if (typeof input?.prompt === "string" && input.prompt.includes("\x00")) {
+      throw new Error("Cron prompt must not contain null bytes");
+    }
     const job = CronStore.create(input);
     if (job.status === "active") CronEngine.scheduleJob(job);
     return job;
   });
   ipcMain.handle(IPC.CRON_UPDATE, (_event, { id, ...changes }) => {
+    if (changes.cronExpression !== undefined) {
+      if (
+        typeof changes.cronExpression !== "string" ||
+        !cron.validate(changes.cronExpression)
+      ) {
+        throw new Error(`Invalid cron expression: "${changes.cronExpression}"`);
+      }
+    }
+    if (typeof changes.prompt === "string" && changes.prompt.includes("\x00")) {
+      throw new Error("Cron prompt must not contain null bytes");
+    }
     CronStore.update(id, changes);
     const job = CronStore.get(id);
     if (job) {
