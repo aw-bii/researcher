@@ -51,8 +51,8 @@ export function WizardStep1({ onNext }: Props) {
       <div>
         <h2 className="text-sm font-semibold mb-1">Setting up your tools</h2>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Claude Code is built in and ready. Checking if you have any
-          additional AI tools installed.
+          Claude Code is built in and ready. Checking if you have any additional
+          AI tools installed.
         </p>
       </div>
       <div className="flex flex-col gap-3">

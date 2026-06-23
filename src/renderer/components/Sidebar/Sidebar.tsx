@@ -15,6 +15,7 @@ interface Props {
   searchMode: boolean;
   onCloseSearch: () => void;
   showCron: boolean;
+  // kept for caller compatibility — component body ignores them; remove in next props-cleanup pass
   onCloseCron: () => void;
   showMCP: boolean;
   onCloseMCP: () => void;
