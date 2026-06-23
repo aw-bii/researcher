@@ -49,15 +49,15 @@ export function MessageList({ messages, streaming, conversationId }: Props) {
         <div className="flex justify-start mb-3">
           <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3 flex items-center gap-1.5">
             <span
-              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce-dot"
+              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-dot-fade"
               style={{ animationDelay: "0ms" }}
             />
             <span
-              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce-dot"
+              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-dot-fade"
               style={{ animationDelay: "200ms" }}
             />
             <span
-              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce-dot"
+              className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 animate-dot-fade"
               style={{ animationDelay: "400ms" }}
             />
           </div>
