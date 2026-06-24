@@ -70,7 +70,7 @@ function App() {
   const [showCron, setShowCron] = useState(false);
   const [showMCP, setShowMCP] = useState(false);
   const [showPlugins, setShowPlugins] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(window.innerWidth < 1024);
   const [viewportLg, setViewportLg] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
@@ -297,7 +297,7 @@ function App() {
           )}
 
           {/* Divider */}
-          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0 shrink-0" />
+          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
 
           {/* Zone 2: Sidebar tools */}
           <button
@@ -332,7 +332,7 @@ function App() {
 
           {/* Spacer + Divider */}
           <div className="flex-1 flex-shrink-0" />
-          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0 shrink-0" />
+          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
 
           {/* Zone 3: Right panels */}
           <button
