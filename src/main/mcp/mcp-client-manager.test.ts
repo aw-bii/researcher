@@ -99,6 +99,16 @@ describe("McpClientManager", () => {
       ).not.toThrow();
     });
 
+    it("rejects mid-string path traversal command", () => {
+      expect(() =>
+        McpClientManager.addServer({
+          name: "traversal",
+          command: "node/../../evil",
+          args: [],
+        }),
+      ).toThrow(/unsafe/i);
+    });
+
     it("rejects non-string env values", () => {
       expect(() =>
         McpClientManager.addServer({

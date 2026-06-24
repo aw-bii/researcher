@@ -8,7 +8,7 @@ import type {
 } from "../../shared/types";
 
 // Allowlist: command must be a plain executable name, no path separators or shell metacharacters.
-const SAFE_COMMAND_RE = /^[a-zA-Z0-9_][a-zA-Z0-9_./-]*$/;
+const SAFE_COMMAND_RE = /^[a-zA-Z0-9_][a-zA-Z0-9_.-]*$/;
 
 interface JsonRpcMessage {
   jsonrpc: "2.0";

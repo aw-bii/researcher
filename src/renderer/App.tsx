@@ -351,10 +351,10 @@ function App() {
         <SecurityDialog
           event={securityEvents[0]}
           onRespond={(approved) => {
-            respondSecurity({
-              id: securityEvents[0].id!,
-              approved,
-            });
+            const eventId = securityEvents[0]?.id;
+            if (eventId) {
+              respondSecurity({ id: eventId, approved });
+            }
             setSecurityEvents((prev) => prev.slice(1));
           }}
         />

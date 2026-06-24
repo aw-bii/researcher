@@ -93,14 +93,25 @@ function createWindow(): BrowserWindow {
   });
 
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    let csp =
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'";
+    let connectSrc = "'self'";
     // Vite HMR uses ws://localhost:<port> in dev mode — allow it
     const devUrl = process.env.ELECTRON_RENDERER_URL;
     if (devUrl) {
       const { port } = new URL(devUrl);
-      csp += ` ws://localhost:${port}`;
+      connectSrc += ` ws://localhost:${port}`;
     }
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "font-src 'self' data:",
+      `connect-src ${connectSrc}`,
+      "frame-src 'none'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+    ].join("; ");
     callback({
       responseHeaders: {
         ...details.responseHeaders,
