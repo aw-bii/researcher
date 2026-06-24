@@ -7,6 +7,7 @@ import type { Attachment, PipelineTemplate } from "../../../shared/types";
 interface Props {
   conversationId: string | null;
   backend: string;
+  model?: string;
   personaId?: string;
   pipelineTemplate?: PipelineTemplate;
   onNewConversation: (id: string) => void;
@@ -15,6 +16,7 @@ interface Props {
 export function ChatView({
   conversationId,
   backend,
+  model,
   personaId,
   pipelineTemplate,
   onNewConversation,
@@ -32,6 +34,7 @@ export function ChatView({
     <SingleChatView
       conversationId={conversationId}
       backend={backend}
+      model={model}
       personaId={personaId}
       onNewConversation={onNewConversation}
     />
@@ -41,6 +44,7 @@ export function ChatView({
 function SingleChatView({
   conversationId,
   backend,
+  model,
   personaId,
   onNewConversation,
 }: Omit<Props, "pipelineTemplate">) {
@@ -51,7 +55,7 @@ function SingleChatView({
     _attachments: Attachment[],
     messageId: string,
   ) => {
-    const newId = await send(message, backend, personaId, messageId);
+    const newId = await send(message, backend, personaId, messageId, model);
     if (!conversationId && newId) onNewConversation(newId);
   };
 

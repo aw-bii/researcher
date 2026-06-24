@@ -1,0 +1,52 @@
+import { useState, useEffect } from "react";
+import { listModels } from "../../ipc";
+
+interface Props {
+  provider: string;
+  value: string;
+  onChange: (model: string) => void;
+}
+
+export function ModelSelector({ provider, value, onChange }: Props) {
+  const [models, setModels] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    listModels(provider)
+      .then(setModels)
+      .catch(() => setModels([]))
+      .finally(() => setLoading(false));
+  }, [provider]);
+
+  const HTTP_BACKENDS = [
+    "openai",
+    "openrouter",
+    "ollama",
+    "claude-api",
+    "gemini-api",
+  ];
+
+  if (!HTTP_BACKENDS.includes(provider)) return null;
+
+  return (
+    <select
+      className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={loading}
+    >
+      {loading ? (
+        <option>Loading...</option>
+      ) : models.length === 0 ? (
+        <option value={value}>{value}</option>
+      ) : (
+        models.map((m) => (
+          <option key={m} value={m}>
+            {m}
+          </option>
+        ))
+      )}
+    </select>
+  );
+}

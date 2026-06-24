@@ -55,6 +55,7 @@ export function useMessages(conversationId: string | null) {
       backend: string,
       personaId?: string,
       messageId?: string,
+      model?: string,
     ) => {
       setStreaming(true);
       streamingContent.current = "";
@@ -83,6 +84,7 @@ export function useMessages(conversationId: string | null) {
         backend,
         personaId,
         messageId,
+        model,
       });
       currentConvId.current = newConvId;
       return newConvId;

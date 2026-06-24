@@ -46,6 +46,7 @@ export function registerIpcHandlers(win: BrowserWindow): void {
         backend,
         personaId,
         messageId: pregenMessageId,
+        model,
       },
     ) => {
       if (typeof message !== "string") {
@@ -58,6 +59,9 @@ export function registerIpcHandlers(win: BrowserWindow): void {
       }
       const adapter = AdapterManager.get(backend) ?? AdapterManager.getActive();
       AdapterManager.setActive(adapter.id);
+      if (model && typeof (adapter as any).setModel === "function") {
+        (adapter as any).setModel(model);
+      }
 
       const persona = personaId
         ? ConvStore.listPersonas().find((p) => p.id === personaId)

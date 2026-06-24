@@ -7,6 +7,7 @@ import { PersonaPanel } from "./components/Personas/PersonaPanel";
 import { PipelinePanel } from "./components/Pipelines/PipelinePanel";
 import { SettingsPanel } from "./components/Settings/SettingsPanel";
 import { BackendSwitcher } from "./components/BackendSwitcher";
+import { ModelSelector } from "./components/Toolbar/ModelSelector";
 import { SecurityDialog } from "./components/SecurityDialog";
 import { UpdateBanner } from "./components/UpdateBanner";
 import { usePipelines } from "./hooks/usePipelines";
@@ -46,6 +47,7 @@ function App() {
   );
   const [mode, setMode] = useState<"single" | "pipeline">("single");
   const [backend, setBackend] = useState("claude");
+  const [model, setModel] = useState("");
   const [personaId, setPersonaId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] =
     useState<PipelineTemplate | null>(null);
@@ -180,7 +182,10 @@ function App() {
           </div>
 
           {mode === "single" && !activeConvMeta?.pipelineTemplateId && (
-            <BackendSwitcher value={backend} onChange={setBackend} />
+            <>
+              <BackendSwitcher value={backend} onChange={setBackend} />
+              <ModelSelector provider={backend} value={model} onChange={setModel} />
+            </>
           )}
 
           {(mode === "pipeline" || activeConvMeta?.pipelineTemplateId) && (
@@ -290,6 +295,7 @@ function App() {
             <ChatView
               conversationId={activeConvId}
               backend={backend}
+              model={model}
               personaId={personaId ?? undefined}
               pipelineTemplate={activePipelineTemplate}
               onNewConversation={(id) => {
