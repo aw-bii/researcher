@@ -79,6 +79,7 @@ function App() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [backendRefresh, setBackendRefresh] = useState(0);
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
   const [online, setOnline] = useState(true);
 
@@ -167,7 +168,14 @@ function App() {
   }, []);
 
   if (!wizardDone) {
-    return <SetupWizard onComplete={() => setWizardDone(true)} />;
+    return (
+      <SetupWizard
+        onComplete={() => {
+          setWizardDone(true);
+          setBackendRefresh((n) => n + 1);
+        }}
+      />
+    );
   }
 
   return (
@@ -272,7 +280,7 @@ function App() {
 
           {mode === "single" && !activeConvMeta?.pipelineTemplateId && (
             <>
-              <div className="flex-shrink-0"><BackendSwitcher value={backend} onChange={setBackend} /></div>
+              <div className="flex-shrink-0"><BackendSwitcher value={backend} onChange={setBackend} refreshTrigger={backendRefresh} /></div>
               <div className="flex-shrink-0"><ModelSelector provider={backend} value={model} onChange={setModel} /></div>
             </>
           )}

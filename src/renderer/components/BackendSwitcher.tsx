@@ -4,10 +4,15 @@ import { useBackends } from "../hooks/useBackends";
 interface Props {
   value: string;
   onChange: (id: string) => void;
+  refreshTrigger?: number;
 }
 
-export const BackendSwitcher = memo(function BackendSwitcher({ value, onChange }: Props) {
-  const { backends } = useBackends();
+export const BackendSwitcher = memo(function BackendSwitcher({
+  value,
+  onChange,
+  refreshTrigger = 0,
+}: Props) {
+  const { backends } = useBackends(refreshTrigger);
 
   return (
     <select
