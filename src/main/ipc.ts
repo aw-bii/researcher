@@ -284,6 +284,16 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   ipcMain.handle(
     IPC.ATTACHMENT_INGEST,
     async (_event, { filePaths, messageId }) => {
+      if (
+        !Array.isArray(filePaths) ||
+        filePaths.some((p) => typeof p !== "string") ||
+        typeof messageId !== "string" ||
+        messageId.length === 0
+      ) {
+        throw new Error(
+          "ATTACHMENT_INGEST requires { filePaths: string[], messageId: string }",
+        );
+      }
       return AttachmentService.ingest(
         filePaths,
         messageId,
@@ -375,9 +385,18 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   });
 
   ipcMain.handle(IPC.MCP_LIST_SERVERS, () => McpClientManager.getServers());
-  ipcMain.handle(IPC.MCP_ADD_SERVER, (_event, config) =>
-    McpClientManager.addServer(config),
-  );
+  ipcMain.handle(IPC.MCP_ADD_SERVER, (_event, config) => {
+    if (
+      typeof config?.name !== "string" ||
+      typeof config?.command !== "string" ||
+      !Array.isArray(config?.args)
+    ) {
+      throw new Error(
+        "MCP_ADD_SERVER requires { name: string, command: string, args: string[] }",
+      );
+    }
+    return McpClientManager.addServer(config);
+  });
   ipcMain.handle(IPC.MCP_REMOVE_SERVER, (_event, { id }) =>
     McpClientManager.removeServer(id),
   );
