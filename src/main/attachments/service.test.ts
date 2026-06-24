@@ -83,6 +83,22 @@ describe("AttachmentService.ingest", () => {
     );
     fs.unlinkSync(pdfFile);
   });
+
+  it("sanitizes a path-traversal messageId before creating destDir", async () => {
+    const txtFile = path.join(TMP, "safe.txt");
+    fs.writeFileSync(txtFile, "data");
+
+    await AttachmentService.ingest([txtFile], "../../etc/passwd", TMP);
+
+    // destDir must have been created under TMP/attachments/.._.._etc_passwd, not TMP/etc/passwd
+    // The sanitizer replaces / and \ with _; dots remain but are harmless as a literal dir name.
+    const safeDir = path.join(TMP, "attachments", ".._.._etc_passwd");
+    expect(fs.existsSync(safeDir)).toBe(true);
+
+    // cleanup
+    fs.rmSync(safeDir, { recursive: true, force: true });
+    fs.unlinkSync(txtFile);
+  });
 });
 
 describe("AttachmentService.getContent", () => {

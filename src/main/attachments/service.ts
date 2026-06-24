@@ -38,6 +38,10 @@ function mimeFromPath(filePath: string): string {
   return map[ext] ?? "application/octet-stream";
 }
 
+function sanitizeId(id: string): string {
+  return id.replace(/[/\\]/g, "_");
+}
+
 async function extractText(
   filePath: string,
   mimeType: string,
@@ -99,7 +103,8 @@ export const AttachmentService = {
       const stat = fs.statSync(filePath);
       if (stat.size > MAX_SIZE_BYTES) continue;
 
-      const destDir = path.join(userDataPath, "attachments", messageId);
+      const safe = sanitizeId(messageId);
+      const destDir = path.join(userDataPath, "attachments", safe);
       fs.mkdirSync(destDir, { recursive: true });
 
       const originalName = path.basename(filePath).replace(/[\x00/\\]/g, "_");
@@ -150,7 +155,8 @@ export const AttachmentService = {
   },
 
   async purge(messageId: string, userDataPath: string): Promise<void> {
-    const dir = path.join(userDataPath, "attachments", messageId);
+    const safe = sanitizeId(messageId);
+    const dir = path.join(userDataPath, "attachments", safe);
     if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
     ConvStore.deleteAttachmentsForMessage(messageId);
   },
