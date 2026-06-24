@@ -23,6 +23,14 @@ export default {
           "0%, 80%, 100%": { opacity: "0.25", transform: "scale(0.85)" },
           "40%": { opacity: "1", transform: "scale(1)" },
         },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-out-right": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "fade-in-up":
@@ -30,6 +38,10 @@ export default {
         "scale-in":
           "scale-in 220ms cubic-bezier(0.23, 1, 0.32, 1) forwards",
         "dot-fade": "dot-fade 1.2s cubic-bezier(0.23, 1, 0.32, 1) infinite",
+        "slide-in-right":
+          "slide-in-right 200ms cubic-bezier(0.32, 0.72, 0, 1) forwards",
+        "slide-out-right":
+          "slide-out-right 200ms cubic-bezier(0.32, 0.72, 0, 1) forwards",
       },
       typography: {
         DEFAULT: {

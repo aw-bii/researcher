@@ -58,6 +58,14 @@ function App() {
   const [showPipelines, setShowPipelines] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const { templates } = usePipelines();
+  const togglePanel = useCallback((panel: "personas" | "pipelines" | "settings") => {
+    const nextPersonas = panel === "personas" ? !showPersonas : false;
+    const nextPipelines = panel === "pipelines" ? !showPipelines : false;
+    const nextSettings = panel === "settings" ? !showSettings : false;
+    setShowPersonas(nextPersonas);
+    setShowPipelines(nextPipelines);
+    setShowSettings(nextSettings);
+  }, [showPersonas, showPipelines, showSettings]);
   const [searchMode, setSearchMode] = useState(false);
   const [showCron, setShowCron] = useState(false);
   const [showMCP, setShowMCP] = useState(false);
@@ -283,25 +291,19 @@ function App() {
 
           {/* Zone 3: Right panels */}
           <button
-            onClick={() => {
-              setShowPersonas((v) => !v);
-              setShowPipelines(false);
-            }}
+            onClick={() => togglePanel("personas")}
             className={`btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 ${showPersonas ? "bg-blue-100 dark:bg-blue-900" : ""}`}
           >
             Personas
           </button>
           <button
-            onClick={() => {
-              setShowPipelines((v) => !v);
-              setShowPersonas(false);
-            }}
+            onClick={() => togglePanel("pipelines")}
             className={`btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 ${showPipelines ? "bg-blue-100 dark:bg-blue-900" : ""}`}
           >
             Pipelines
           </button>
           <button
-            onClick={() => setShowSettings((v) => !v)}
+            onClick={() => togglePanel("settings")}
             title="Settings"
             className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
             aria-label="Settings"
@@ -341,13 +343,12 @@ function App() {
             />
           )}
           <div
-            className={`overflow-hidden transition-[max-width,opacity] duration-200 ease-press ${
-              showPersonas
-                ? "max-w-72 opacity-100 border-l border-gray-200 dark:border-gray-700"
-                : "max-w-0 opacity-0"
-            }`}
+            className={`overflow-hidden transition-transform duration-200 ease-drawer ${
+              showPersonas ? "translate-x-0" : "translate-x-full"
+            } ${showPersonas ? "border-l border-gray-200 dark:border-gray-700" : ""}`}
+            style={{ pointerEvents: showPersonas ? "auto" : "none" }}
           >
-            <div className="w-72 lg:w-56 overflow-y-auto h-full">
+            <div className="w-56 lg:w-64 overflow-y-auto h-full">
               <PersonaPanel
                 activePersonaId={personaId}
                 onSelect={setPersonaId}
@@ -355,13 +356,12 @@ function App() {
             </div>
           </div>
           <div
-            className={`overflow-hidden transition-[max-width,opacity] duration-200 ease-press ${
-              showPipelines
-                ? "max-w-72 opacity-100 border-l border-gray-200 dark:border-gray-700"
-                : "max-w-0 opacity-0"
-            }`}
+            className={`overflow-hidden transition-transform duration-200 ease-drawer ${
+              showPipelines ? "translate-x-0" : "translate-x-full"
+            } ${showPipelines ? "border-l border-gray-200 dark:border-gray-700" : ""}`}
+            style={{ pointerEvents: showPipelines ? "auto" : "none" }}
           >
-            <div className="w-72 lg:w-56 overflow-y-auto h-full">
+            <div className="w-56 lg:w-64 overflow-y-auto h-full">
               <PipelinePanel
                 activeTemplateId={activePipelineTemplate?.id ?? null}
                 onSelect={(t) => {
@@ -372,11 +372,10 @@ function App() {
             </div>
           </div>
           <div
-            className={`overflow-hidden transition-[max-width,opacity] duration-200 ease-press ${
-              showSettings
-                ? "max-w-72 opacity-100 border-l border-gray-200 dark:border-gray-700"
-                : "max-w-0 opacity-0"
-            }`}
+            className={`overflow-hidden transition-transform duration-200 ease-drawer ${
+              showSettings ? "translate-x-0" : "translate-x-full"
+            } ${showSettings ? "border-l border-gray-200 dark:border-gray-700" : ""}`}
+            style={{ pointerEvents: showSettings ? "auto" : "none" }}
           >
             <SettingsPanel
               onClose={() => setShowSettings(false)}
