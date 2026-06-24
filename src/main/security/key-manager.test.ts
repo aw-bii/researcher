@@ -1,21 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Use vi.hoisted so variables are available when vi.mock factory runs
-const { mockEncryptString, mockDecryptString, mockIsEncryptionAvailable, settings } =
-  vi.hoisted(() => {
-    const mockEncryptString = vi.fn((s: string) => {
-      if (s.length === 0) return Buffer.from("");
-      return Buffer.from("enc:" + s);
-    });
-    const mockDecryptString = vi.fn((b: Buffer) => {
-      const str = b.toString("utf8");
-      if (str === "") return "";
-      return str.slice(4);
-    });
-    const mockIsEncryptionAvailable = vi.fn(() => true);
-    const settings = new Map<string, string>();
-    return { mockEncryptString, mockDecryptString, mockIsEncryptionAvailable, settings };
+const {
+  mockEncryptString,
+  mockDecryptString,
+  mockIsEncryptionAvailable,
+  settings,
+} = vi.hoisted(() => {
+  const mockEncryptString = vi.fn((s: string) => {
+    if (s.length === 0) return Buffer.from("");
+    return Buffer.from("enc:" + s);
   });
+  const mockDecryptString = vi.fn((b: Buffer) => {
+    const str = b.toString("utf8");
+    if (str === "") return "";
+    return str.slice(4);
+  });
+  const mockIsEncryptionAvailable = vi.fn(() => true);
+  const settings = new Map<string, string>();
+  return {
+    mockEncryptString,
+    mockDecryptString,
+    mockIsEncryptionAvailable,
+    settings,
+  };
+});
 
 vi.mock("electron", () => ({
   safeStorage: {

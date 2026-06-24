@@ -31,11 +31,17 @@ export function MessageList({ messages, streaming, conversationId }: Props) {
   // Only scroll when a genuinely new message appears (not on every chunk).
   const lastMsgId = messages.at(-1)?.id;
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: streaming ? "instant" : "smooth" });
+    bottomRef.current?.scrollIntoView({
+      behavior: streaming ? "instant" : "smooth",
+    });
   }, [lastMsgId, streaming]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-4" aria-live="polite" role="log">
+    <div
+      className="flex-1 overflow-y-auto px-4 py-4"
+      aria-live="polite"
+      role="log"
+    >
       {messages.map((msg) => {
         const isNew = !seenIdsRef.current.has(msg.id);
         return (

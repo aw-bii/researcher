@@ -31,7 +31,9 @@ function ImageAttachment({ att }: { att: Attachment }) {
   );
 }
 
-export const AttachmentRow = memo(function AttachmentRow({ attachments }: Props) {
+export const AttachmentRow = memo(function AttachmentRow({
+  attachments,
+}: Props) {
   if (attachments.length === 0) return null;
 
   return (

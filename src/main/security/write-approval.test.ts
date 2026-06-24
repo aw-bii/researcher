@@ -80,9 +80,9 @@ describe("WriteApproval", () => {
       for (let i = 0; i < 100; i++) {
         WriteApproval.queue(`/tmp/file-${i}.txt`, `content-${i}`);
       }
-      expect(() => WriteApproval.queue("/tmp/overflow.txt", "overflow")).toThrow(
-        /pending.*limit|limit.*pending|queue.*full/i,
-      );
+      expect(() =>
+        WriteApproval.queue("/tmp/overflow.txt", "overflow"),
+      ).toThrow(/pending.*limit|limit.*pending|queue.*full/i);
       WriteApproval.reset();
     });
   });

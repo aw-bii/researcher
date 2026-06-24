@@ -137,7 +137,11 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   );
 
   ipcMain.handle(IPC.CONV_CREATE, (_event, { title, backend, personaId }) => {
-    return ConvStore.createConversation(title || "New conversation", backend || "claude", personaId || null);
+    return ConvStore.createConversation(
+      title || "New conversation",
+      backend || "claude",
+      personaId || null,
+    );
   });
 
   ipcMain.handle(IPC.CONV_GET, (_event, { conversationId }) => ({
@@ -179,11 +183,18 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   ipcMain.handle(IPC.NET_CHECK, async () => {
     try {
       await new Promise<void>((resolve, reject) => {
-        const req = https.get("https://registry.npmjs.org", { timeout: 5000 }, () => {
-          resolve();
-        });
+        const req = https.get(
+          "https://registry.npmjs.org",
+          { timeout: 5000 },
+          () => {
+            resolve();
+          },
+        );
         req.on("error", reject);
-        req.on("timeout", () => { req.destroy(); reject(new Error("timeout")); });
+        req.on("timeout", () => {
+          req.destroy();
+          reject(new Error("timeout"));
+        });
       });
       return { online: true };
     } catch {
@@ -199,11 +210,14 @@ export function registerIpcHandlers(win: BrowserWindow): void {
     };
   });
 
-  ipcMain.handle(IPC.NET_SET_PROXY, (_event, { httpProxy, httpsProxy, noProxy }) => {
-    ConvStore.setSetting("proxy_http", httpProxy || "");
-    ConvStore.setSetting("proxy_https", httpsProxy || "");
-    ConvStore.setSetting("proxy_no", noProxy || "");
-  });
+  ipcMain.handle(
+    IPC.NET_SET_PROXY,
+    (_event, { httpProxy, httpsProxy, noProxy }) => {
+      ConvStore.setSetting("proxy_http", httpProxy || "");
+      ConvStore.setSetting("proxy_https", httpsProxy || "");
+      ConvStore.setSetting("proxy_no", noProxy || "");
+    },
+  );
 
   ipcMain.handle(IPC.CONV_DELETE, (_event, { conversationId }) => {
     ConvStore.deleteConversation(conversationId);

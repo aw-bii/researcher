@@ -58,7 +58,9 @@ describe("SecurityDialog", () => {
         onRespond={vi.fn()}
       />,
     );
-    const card = container.querySelector('[role="dialog"] > div') as HTMLElement;
+    const card = container.querySelector(
+      '[role="dialog"] > div',
+    ) as HTMLElement;
     expect(card.classList.contains("motion-safe:animate-scale-in")).toBe(true);
     expect(card.classList.contains("animate-scale-in")).toBe(false);
   });

@@ -7,7 +7,11 @@ interface Props {
   onChange: (model: string) => void;
 }
 
-export const ModelSelector = memo(function ModelSelector({ provider, value, onChange }: Props) {
+export const ModelSelector = memo(function ModelSelector({
+  provider,
+  value,
+  onChange,
+}: Props) {
   const [models, setModels] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 

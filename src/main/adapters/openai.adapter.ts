@@ -56,7 +56,9 @@ export class OpenAIAdapter extends BaseHttpAdapter {
   }
 
   async listModels(): Promise<string[]> {
-    const key = (await import("../security/key-manager")).KeyManager.getKey(this.id);
+    const key = (await import("../security/key-manager")).KeyManager.getKey(
+      this.id,
+    );
     if (!key) return [this.getDefaultModel()];
     try {
       const res = await fetch("https://api.openai.com/v1/models", {

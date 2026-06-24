@@ -74,7 +74,12 @@ export abstract class BaseHttpAdapter implements BackendAdapter {
     }
 
     const model = this.currentModel ?? this.getDefaultModel();
-    const body = this.buildRequestBody({ message, persona, attachments, model });
+    const body = this.buildRequestBody({
+      message,
+      persona,
+      attachments,
+      model,
+    });
 
     const controller = new AbortController();
     this.currentRequest = controller;

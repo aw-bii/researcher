@@ -11,20 +11,38 @@ function canSpawnNpm(): { ok: boolean; error?: string } {
     execSync("npm --version", { stdio: "pipe", timeout: 5000 });
     return { ok: true };
   } catch {
-    return { ok: false, error: "npm not found in PATH. Install Node.js from https://nodejs.org" };
+    return {
+      ok: false,
+      error: "npm not found in PATH. Install Node.js from https://nodejs.org",
+    };
   }
 }
 
 function getProxyEnv(): Record<string, string> {
   try {
     const db = getDb();
-    const http = db.prepare("SELECT value FROM settings WHERE key = ?").get("proxy_http") as any;
-    const https = db.prepare("SELECT value FROM settings WHERE key = ?").get("proxy_https") as any;
-    const no = db.prepare("SELECT value FROM settings WHERE key = ?").get("proxy_no") as any;
+    const http = db
+      .prepare("SELECT value FROM settings WHERE key = ?")
+      .get("proxy_http") as any;
+    const https = db
+      .prepare("SELECT value FROM settings WHERE key = ?")
+      .get("proxy_https") as any;
+    const no = db
+      .prepare("SELECT value FROM settings WHERE key = ?")
+      .get("proxy_no") as any;
     const env: Record<string, string> = {};
-    if (http?.value) { env.HTTP_PROXY = http.value; env.http_proxy = http.value; }
-    if (https?.value) { env.HTTPS_PROXY = https.value; env.https_proxy = https.value; }
-    if (no?.value) { env.NO_PROXY = no.value; env.no_proxy = no.value; }
+    if (http?.value) {
+      env.HTTP_PROXY = http.value;
+      env.http_proxy = http.value;
+    }
+    if (https?.value) {
+      env.HTTPS_PROXY = https.value;
+      env.https_proxy = https.value;
+    }
+    if (no?.value) {
+      env.NO_PROXY = no.value;
+      env.no_proxy = no.value;
+    }
     return env;
   } catch {
     return {};

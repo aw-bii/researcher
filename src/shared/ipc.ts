@@ -176,7 +176,11 @@ export interface IpcInvokeMap {
   [IPC.MODEL_LIST]: { provider: string };
 
   [IPC.NET_CHECK]: void;
-  [IPC.NET_SET_PROXY]: { httpProxy: string; httpsProxy: string; noProxy: string };
+  [IPC.NET_SET_PROXY]: {
+    httpProxy: string;
+    httpsProxy: string;
+    noProxy: string;
+  };
   [IPC.NET_GET_PROXY]: void;
 }
 
@@ -205,5 +209,9 @@ export interface IpcReturnMap {
   [IPC.MODEL_LIST]: string[];
 
   [IPC.NET_CHECK]: { online: boolean };
-  [IPC.NET_GET_PROXY]: { httpProxy: string; httpsProxy: string; noProxy: string };
+  [IPC.NET_GET_PROXY]: {
+    httpProxy: string;
+    httpsProxy: string;
+    noProxy: string;
+  };
 }

@@ -48,10 +48,15 @@ export function WizardStep1({ onNext }: Props) {
       } catch (err) {
         setStatuses((prev) =>
           prev.map((s) =>
-            s.id === b.id ? { ...s, available: false, authenticated: false, loading: false } : s,
+            s.id === b.id
+              ? { ...s, available: false, authenticated: false, loading: false }
+              : s,
           ),
         );
-        setErrors((prev) => ({ ...prev, [b.id]: `Probe failed: ${(err as Error).message}` }));
+        setErrors((prev) => ({
+          ...prev,
+          [b.id]: `Probe failed: ${(err as Error).message}`,
+        }));
       }
     });
   }, []);

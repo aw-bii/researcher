@@ -43,7 +43,8 @@ export const CronEngine = {
     try {
       const { ConvStore } = require("../store");
       const adapterManager = require("../adapters/manager").AdapterManager;
-      const securityMiddlewareFn = require("../adapters/manager").securityMiddleware;
+      const securityMiddlewareFn =
+        require("../adapters/manager").securityMiddleware;
       const { BrowserWindow } = require("electron");
       const { IPC } = require("../../shared/ipc");
       const adapter =

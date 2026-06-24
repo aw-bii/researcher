@@ -6,7 +6,11 @@ interface Props {
   onRemove: (id: string) => void;
 }
 
-export const AttachmentChip = memo(function AttachmentChip({ name, attachmentId, onRemove }: Props) {
+export const AttachmentChip = memo(function AttachmentChip({
+  name,
+  attachmentId,
+  onRemove,
+}: Props) {
   return (
     <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs max-w-[160px] animate-fade-in-up [animation-duration:150ms]">
       <svg

@@ -31,7 +31,9 @@ declare global {
 }
 
 export let lastIpcError: Error | null = null;
-export function clearIpcError() { lastIpcError = null; }
+export function clearIpcError() {
+  lastIpcError = null;
+}
 
 function ipcInvoke<T>(channel: string, ...args: unknown[]): Promise<T> {
   return window.ipc.invoke(channel, ...args).catch((err: Error) => {
@@ -65,8 +67,16 @@ export async function listConversations(
 ): Promise<Conversation[]> {
   return ipcInvoke<Conversation[]>(IPC.CONV_LIST, { limit, offset });
 }
-export async function createConversation(title: string, backend: string, personaId?: string): Promise<Conversation> {
-  return ipcInvoke<Conversation>(IPC.CONV_CREATE, { title, backend, personaId });
+export async function createConversation(
+  title: string,
+  backend: string,
+  personaId?: string,
+): Promise<Conversation> {
+  return ipcInvoke<Conversation>(IPC.CONV_CREATE, {
+    title,
+    backend,
+    personaId,
+  });
 }
 
 export async function getConversation(
@@ -159,13 +169,17 @@ export async function ingestAttachments(
   messageId: string,
 ): Promise<import("../shared/types").Attachment[]> {
   return ipcInvoke<import("../shared/types").Attachment[]>(
-    IPC.ATTACHMENT_INGEST, { filePaths, messageId },
+    IPC.ATTACHMENT_INGEST,
+    { filePaths, messageId },
   );
 }
 export async function listAttachments(
   messageId: string,
 ): Promise<import("../shared/types").Attachment[]> {
-  return ipcInvoke<import("../shared/types").Attachment[]>(IPC.ATTACHMENT_LIST, { messageId });
+  return ipcInvoke<import("../shared/types").Attachment[]>(
+    IPC.ATTACHMENT_LIST,
+    { messageId },
+  );
 }
 export async function getAttachmentDataUrl(
   storedPath: string,
@@ -217,7 +231,10 @@ export async function listProviders(): Promise<string[]> {
 export async function getDefaultModel(provider: string): Promise<string> {
   return ipcInvoke<string>(IPC.MODEL_GET_DEFAULT, { provider });
 }
-export async function setDefaultModel(provider: string, model: string): Promise<void> {
+export async function setDefaultModel(
+  provider: string,
+  model: string,
+): Promise<void> {
   await ipcInvoke<void>(IPC.MODEL_SET_DEFAULT, { provider, model });
 }
 export async function listModels(provider: string): Promise<string[]> {
@@ -340,9 +357,19 @@ export function onUpdateError(cb: (message: string) => void): () => void {
 export async function checkConnectivity(): Promise<{ online: boolean }> {
   return ipcInvoke<{ online: boolean }>(IPC.NET_CHECK);
 }
-export async function getProxySettings(): Promise<{ httpProxy: string; httpsProxy: string; noProxy: string }> {
-  return ipcInvoke<{ httpProxy: string; httpsProxy: string; noProxy: string }>(IPC.NET_GET_PROXY);
+export async function getProxySettings(): Promise<{
+  httpProxy: string;
+  httpsProxy: string;
+  noProxy: string;
+}> {
+  return ipcInvoke<{ httpProxy: string; httpsProxy: string; noProxy: string }>(
+    IPC.NET_GET_PROXY,
+  );
 }
-export async function setProxySettings(settings: { httpProxy: string; httpsProxy: string; noProxy: string }): Promise<void> {
+export async function setProxySettings(settings: {
+  httpProxy: string;
+  httpsProxy: string;
+  noProxy: string;
+}): Promise<void> {
   await ipcInvoke(IPC.NET_SET_PROXY, settings);
 }

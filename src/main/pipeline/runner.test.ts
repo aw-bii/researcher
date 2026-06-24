@@ -4,7 +4,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const { mockAbort, mockGet, mockSecurityMiddleware } = vi.hoisted(() => ({
   mockAbort: vi.fn(),
   mockGet: vi.fn(),
-  mockSecurityMiddleware: vi.fn(async function* (source: AsyncIterable<unknown>) {
+  mockSecurityMiddleware: vi.fn(async function* (
+    source: AsyncIterable<unknown>,
+  ) {
     yield* source as AsyncIterable<any>;
   }),
 }));

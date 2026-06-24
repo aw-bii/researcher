@@ -52,9 +52,7 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
         return { id: p.id, exists };
       }),
     ).then((results) => {
-      setKeyStates(
-        Object.fromEntries(results.map((r) => [r.id, r.exists])),
-      );
+      setKeyStates(Object.fromEntries(results.map((r) => [r.id, r.exists])));
     });
   }, []);
 
@@ -69,15 +67,21 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
   }, [theme]);
 
   useEffect(() => {
-    getProxySettings().then((p) => {
-      setProxyHttp(p.httpProxy);
-      setProxyHttps(p.httpsProxy);
-      setProxyNo(p.noProxy);
-    }).catch(() => {});
+    getProxySettings()
+      .then((p) => {
+        setProxyHttp(p.httpProxy);
+        setProxyHttps(p.httpsProxy);
+        setProxyNo(p.noProxy);
+      })
+      .catch(() => {});
   }, []);
 
   const saveProxy = async () => {
-    await setProxySettings({ httpProxy: proxyHttp, httpsProxy: proxyHttps, noProxy: proxyNo });
+    await setProxySettings({
+      httpProxy: proxyHttp,
+      httpsProxy: proxyHttps,
+      noProxy: proxyNo,
+    });
   };
 
   const handleThemeChange = async (t: "system" | "light" | "dark") => {
@@ -190,10 +194,14 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
         </div>
 
         <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-          <span className="text-xs font-semibold block mb-2">Network Proxy</span>
+          <span className="text-xs font-semibold block mb-2">
+            Network Proxy
+          </span>
           <div className="space-y-2">
             <div>
-              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">HTTP_PROXY</label>
+              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
+                HTTP_PROXY
+              </label>
               <input
                 className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
                 placeholder="http://proxy:8080"
@@ -202,7 +210,9 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">HTTPS_PROXY</label>
+              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
+                HTTPS_PROXY
+              </label>
               <input
                 className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
                 placeholder="https://proxy:8443"
@@ -211,7 +221,9 @@ export function SettingsPanel({ onClose, onReRunWizard }: Props) {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">NO_PROXY</label>
+              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">
+                NO_PROXY
+              </label>
               <input
                 className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600"
                 placeholder="localhost,127.0.0.1"

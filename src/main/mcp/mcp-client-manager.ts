@@ -116,7 +116,9 @@ export const McpClientManager = {
     env?: Record<string, string>;
   }): McpServerConfig {
     if (!SAFE_COMMAND_RE.test(config.command)) {
-      throw new Error(`MCP command contains unsafe characters: ${config.command}`);
+      throw new Error(
+        `MCP command contains unsafe characters: ${config.command}`,
+      );
     }
     if (config.env) {
       for (const [k, v] of Object.entries(config.env)) {
@@ -156,7 +158,8 @@ export const McpClientManager = {
   connect(id: string) {
     const server = servers.get(id);
     if (!server) throw new Error(`Server ${id} not found`);
-    if (!server.config.enabled) return Promise.reject(new Error(`Server ${id} is disabled`));
+    if (!server.config.enabled)
+      return Promise.reject(new Error(`Server ${id} is disabled`));
     if (server.process) return;
 
     return new Promise<void>((resolve, reject) => {

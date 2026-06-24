@@ -6,6 +6,22 @@ vi.mock("child_process");
 import { installBackend } from "./install";
 import * as child_process from "child_process";
 
+function expectShellMatchesPlatform() {
+  if (process.platform === "win32") {
+    expect(child_process.spawn).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ shell: true }),
+    );
+  } else {
+    expect(child_process.spawn).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ shell: true }),
+    );
+  }
+}
+
 function makeMockProcess(exitCode: number, stderrOutput = "") {
   const mockProc = {
     stdout: { on: vi.fn() },
@@ -55,19 +71,7 @@ describe("installBackend", () => {
       expect.objectContaining({ stdio: "pipe" }),
     );
     // Regression guard: shell must match platform (true on Windows, absent on others)
-    if (process.platform === "win32") {
-      expect(child_process.spawn).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    } else {
-      expect(child_process.spawn).not.toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    }
+    expectShellMatchesPlatform();
   });
 
   it("resolves { success: false } for an unknown backend without calling spawn", async () => {
@@ -90,19 +94,7 @@ describe("installBackend", () => {
     expect(result.success).toBe(false);
     expect(result.error).toMatch(/Permission denied/i);
     // Regression guard: shell must match platform (true on Windows, absent on others)
-    if (process.platform === "win32") {
-      expect(child_process.spawn).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    } else {
-      expect(child_process.spawn).not.toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    }
+    expectShellMatchesPlatform();
   });
 
   it("returns generic error message for non-permission failure", async () => {
@@ -115,18 +107,6 @@ describe("installBackend", () => {
     expect(result.success).toBe(false);
     expect(result.error).toMatch(/Install failed with exit code 1/);
     // Regression guard: shell must match platform (true on Windows, absent on others)
-    if (process.platform === "win32") {
-      expect(child_process.spawn).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    } else {
-      expect(child_process.spawn).not.toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ shell: true }),
-      );
-    }
+    expectShellMatchesPlatform();
   });
 });

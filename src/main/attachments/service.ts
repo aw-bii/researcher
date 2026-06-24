@@ -74,8 +74,12 @@ async function extractText(
         .map((ws) => {
           const rows: string[] = [];
           ws.eachRow((row) => {
-            const values = (row.values as (ExcelJS.CellValue | undefined)[]).slice(1);
-            rows.push(values.map((v) => (v == null ? "" : String(v))).join(","));
+            const values = (
+              row.values as (ExcelJS.CellValue | undefined)[]
+            ).slice(1);
+            rows.push(
+              values.map((v) => (v == null ? "" : String(v))).join(","),
+            );
           });
           return rows.join("\n");
         })

@@ -70,7 +70,9 @@ describe("McpClientManager", () => {
   describe("addServer validation", () => {
     afterEach(() => {
       // clean up any servers added during these tests
-      McpClientManager.getServers().forEach((s) => McpClientManager.removeServer(s.id));
+      McpClientManager.getServers().forEach((s) =>
+        McpClientManager.removeServer(s.id),
+      );
     });
 
     it("rejects path-traversal command", () => {

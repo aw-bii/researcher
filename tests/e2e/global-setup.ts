@@ -8,7 +8,10 @@ const SQLITE3_BUILD = path.join(
   "../../node_modules/better-sqlite3/build",
 );
 const RELEASE_BINARY = path.join(SQLITE3_BUILD, "Release/better_sqlite3.node");
-const ELECTRON_BINARY = path.join(SQLITE3_BUILD, "electron_better_sqlite3.node");
+const ELECTRON_BINARY = path.join(
+  SQLITE3_BUILD,
+  "electron_better_sqlite3.node",
+);
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
 
@@ -55,8 +58,9 @@ export default async function globalSetup() {
     fs.copyFileSync(ELECTRON_BINARY, RELEASE_BINARY);
   } else {
     throw new Error(
-      "Electron binary not found at " + ELECTRON_BINARY +
-      "\nRun: npm run rebuild:electron"
+      "Electron binary not found at " +
+        ELECTRON_BINARY +
+        "\nRun: npm run rebuild:electron",
     );
   }
 

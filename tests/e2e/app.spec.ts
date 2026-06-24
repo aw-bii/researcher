@@ -21,17 +21,17 @@ test("wizard flow — complete all 3 steps", async ({ window }) => {
   await continueBtn.click();
 
   // Step 3: auth check — all available backends authenticated
-  await expect(
-    window.getByText("All tools are signed in"),
-  ).toBeVisible({ timeout: 5_000 });
+  await expect(window.getByText("All tools are signed in")).toBeVisible({
+    timeout: 5_000,
+  });
 
   await window.getByRole("button", { name: "Finish Setup" }).click();
 
   // Main app loaded — sidebar header visible (use exact match to avoid the
   // "Welcome to MyRA" empty-state heading also matching)
-  await expect(
-    window.getByText("MyRA", { exact: true }).first(),
-  ).toBeVisible({ timeout: 5_000 });
+  await expect(window.getByText("MyRA", { exact: true }).first()).toBeVisible({
+    timeout: 5_000,
+  });
 });
 
 test("chat flow — send a message and receive echo", async ({ window }) => {

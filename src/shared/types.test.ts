@@ -36,12 +36,18 @@ describe("SecurityEvent types", () => {
   });
 
   it("SecurityRespondPayload uses id, not eventType", () => {
-    const payload: SecurityRespondPayload = { id: "uuid-abc-123", approved: true };
+    const payload: SecurityRespondPayload = {
+      id: "uuid-abc-123",
+      approved: true,
+    };
     expect(payload.id).toBe("uuid-abc-123");
     expect(payload.approved).toBe(true);
 
     // @ts-expect-error — eventType must no longer be accepted
-    const _bad: SecurityRespondPayload = { eventType: "write_approval_needed", approved: true };
+    const _bad: SecurityRespondPayload = {
+      eventType: "write_approval_needed",
+      approved: true,
+    };
     void _bad;
   });
 });

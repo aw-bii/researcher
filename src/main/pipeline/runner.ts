@@ -39,7 +39,9 @@ export class PipelineRunner {
         for await (const chunk of securityMiddleware(
           adapter.send(currentInput, step.persona),
           adapter.id,
-          (evt) => { win?.webContents.send(IPC.SECURITY_EVENT, evt); },
+          (evt) => {
+            win?.webContents.send(IPC.SECURITY_EVENT, evt);
+          },
         )) {
           if (aborted) {
             adapter.abort();
