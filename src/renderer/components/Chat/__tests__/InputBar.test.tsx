@@ -16,18 +16,14 @@ import { InputBar } from "../InputBar";
 
 describe("InputBar Send/Stop", () => {
   it("shows Send button when not streaming", () => {
-    const { container } = render(<InputBar onSend={vi.fn()} onAbort={vi.fn()} streaming={false} />);
-    const sendButton = container.querySelector('button[class*="bg-blue"]');
-    const stopButton = container.querySelector('button[class*="bg-red"]');
-    expect(sendButton).toBeTruthy();
-    expect(stopButton).toBeNull();
+    render(<InputBar onSend={vi.fn()} onAbort={vi.fn()} streaming={false} />);
+    expect(screen.getByRole("button", { name: /send/i })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /stop/i })).toBeNull();
   });
 
   it("shows Stop button when streaming", () => {
-    const { container } = render(<InputBar onSend={vi.fn()} onAbort={vi.fn()} streaming={true} />);
-    const sendButton = container.querySelector('button[class*="bg-blue"]');
-    const stopButton = container.querySelector('button[class*="bg-red"]');
-    expect(stopButton).toBeTruthy();
-    expect(sendButton).toBeNull();
+    render(<InputBar onSend={vi.fn()} onAbort={vi.fn()} streaming={true} />);
+    expect(screen.getByRole("button", { name: /stop/i })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /send/i })).toBeNull();
   });
 });
