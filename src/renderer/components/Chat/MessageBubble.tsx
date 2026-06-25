@@ -56,8 +56,8 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
         aria-label={isUser ? "Your message" : "Assistant message"}
         className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
           isUser
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            ? "bg-primary text-on-primary"
+            : "bg-bubble text-text-base"
         }`}
       >
         {isUser ? (
@@ -72,7 +72,7 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
         {attachments.length > 0 && <AttachmentRow attachments={attachments} />}
         <div
           className={`text-xs mt-1 ${
-            isUser ? "text-blue-100" : "text-gray-400 dark:text-gray-500"
+            isUser ? "text-on-primary/70" : "text-text-muted"
           }`}
         >
           {message.backend} ·{" "}

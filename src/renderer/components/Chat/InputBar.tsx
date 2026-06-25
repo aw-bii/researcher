@@ -79,7 +79,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
 
   return (
     <div
-      className="border-t border-gray-200 dark:border-gray-700 p-4"
+      className="border-t border-border p-4"
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
@@ -89,7 +89,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
           {errors.map((err, i) => (
             <span
               key={i}
-              className="text-xs px-2.5 py-1 bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-700 rounded-md flex items-center gap-1.5"
+              className="text-xs px-2.5 py-1 bg-danger-subtle text-danger border border-danger-subtle rounded-md flex items-center gap-1.5"
             >
               <Warning size={12} weight="bold" />
               {err}
@@ -127,7 +127,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isDisabled}
-          className="p-2 text-gray-400 hoverable:hover:text-gray-600 dark:hoverable:hover:text-gray-300 disabled:opacity-40"
+          className="p-2 text-text-muted hoverable:hover:text-text-base disabled:opacity-40"
           aria-label="Attach file"
         >
           <Paperclip size={20} />
@@ -135,7 +135,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
 
         <textarea
           ref={textareaRef}
-          className="flex-1 resize-none rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 resize-none rounded-xl border border-border-strong bg-surface px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           style={{ maxHeight: 'min(10rem, 40vh)' }}
           rows={1}
           value={value}
@@ -147,7 +147,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
         {streaming ? (
           <button
             onClick={onAbort}
-            className="px-4 py-3 rounded-xl bg-red-500 text-white text-sm hoverable:hover:bg-red-600 active:scale-95 motion-safe:animate-scale-in"
+            className="px-4 py-3 rounded-xl bg-danger text-on-primary text-sm hoverable:hover:bg-danger-dark active:scale-95 motion-safe:animate-scale-in"
           >
             Stop
           </button>
@@ -155,7 +155,7 @@ export function InputBar({ onSend, onAbort, streaming, disabled }: Props) {
           <button
             onClick={submit}
             disabled={!value.trim() || isDisabled}
-            className="px-4 py-3 rounded-xl bg-blue-600 text-white text-sm hoverable:hover:bg-blue-700 disabled:opacity-50 active:scale-95 motion-safe:animate-scale-in"
+            className="px-4 py-3 rounded-xl bg-primary text-on-primary text-sm hoverable:hover:bg-primary-dark disabled:opacity-50 active:scale-95 motion-safe:animate-scale-in"
           >
             {ingesting ? "…" : "Send"}
           </button>

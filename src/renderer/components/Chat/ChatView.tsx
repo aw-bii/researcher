@@ -62,7 +62,7 @@ function SingleChatView({
   return (
     <div className="flex flex-col h-full">
       {messages.length === 0 && !streaming && (
-        <div className="flex-1 flex items-center justify-center text-gray-400 text-sm animate-fade-in-up">
+        <div className="flex-1 flex items-center justify-center text-text-muted text-sm animate-fade-in-up">
           Start a conversation
         </div>
       )}
@@ -123,7 +123,7 @@ function PipelineChatView({
       <div
         role="tablist"
         aria-label="Pipeline steps"
-        className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
+        className="flex border-b border-border overflow-x-auto"
       >
         {template.steps.map((step, i) => (
           <button
@@ -135,13 +135,13 @@ function PipelineChatView({
             onClick={() => !streaming && setActiveTabIndex(i)}
             className={`px-3 py-2 text-xs whitespace-nowrap border-b-2 transition-colors transition-transform duration-100 ease-press active:scale-95 ${
               activeTabIndex === i
-                ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
-                : "border-transparent text-gray-500 hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-300"
+                ? "border-primary text-primary"
+                : "border-transparent text-text-muted hoverable:hover:text-text-base"
             } ${streaming && streamingStepIndex !== i ? "opacity-50" : ""}`}
           >
             {step.backendId}
             {streamingStepIndex === i && (
-              <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+              <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             )}
           </button>
         ))}
@@ -149,7 +149,7 @@ function PipelineChatView({
 
       {/* Messages for active tab */}
       {activeMessages.length === 0 && !streaming && (
-        <div className="flex-1 flex items-center justify-center text-gray-400 text-sm animate-fade-in-up">
+        <div className="flex-1 flex items-center justify-center text-text-muted text-sm animate-fade-in-up">
           {Object.keys(stepMessages).length === 0
             ? "Start a pipeline run"
             : "No output for this step yet"}

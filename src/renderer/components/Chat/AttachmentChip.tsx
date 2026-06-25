@@ -12,9 +12,9 @@ export const AttachmentChip = memo(function AttachmentChip({
   onRemove,
 }: Props) {
   return (
-    <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs max-w-[160px] animate-fade-in-up [animation-duration:150ms]">
+    <div className="flex items-center gap-1 px-2 py-1 bg-bubble rounded text-xs max-w-[160px] animate-fade-in-up [animation-duration:150ms]">
       <svg
-        className="w-3 h-3 flex-shrink-0 text-gray-500"
+        className="w-3 h-3 flex-shrink-0 text-text-muted"
         viewBox="0 0 16 16"
         fill="currentColor"
       >
@@ -23,7 +23,7 @@ export const AttachmentChip = memo(function AttachmentChip({
       <span className="truncate">{name}</span>
       <button
         onClick={() => onRemove(attachmentId)}
-        className="ml-1 text-gray-400 hoverable:hover:text-red-500 flex-shrink-0 transition-transform duration-100 ease-press active:scale-95"
+        className="ml-1 text-text-muted hoverable:hover:text-danger flex-shrink-0 transition-transform duration-100 ease-press active:scale-95"
         aria-label="Remove attachment"
       >
         ×
