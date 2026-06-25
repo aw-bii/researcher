@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useConversations } from "../../hooks/useConversations";
 import { ConvItem } from "./ConvItem";
 import type { SearchResult } from "../../../shared/types";
@@ -25,15 +25,24 @@ export function ConvList({
   const [searchResults, setSearchResults] = useState<SearchResult[] | null>(
     null,
   );
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSearch = async (q: string) => {
+  useEffect(() => () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); }, []);
+
+  const handleSearch = (q: string) => {
     setQuery(q);
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
     if (!q.trim()) {
       setSearchResults(null);
       return;
     }
-    const results = await search(q);
-    setSearchResults(results);
+
+    debounceTimer.current = setTimeout(async () => {
+      const results = await search(q);
+      setSearchResults(results);
+    }, 300);
   };
 
   const displayed = searchResults
