@@ -58,6 +58,14 @@
     min-height: 44px;
     min-width: 44px;
   }
+  /* Ensure small action buttons (delete, edit) also meet touch target size */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @media (min-resolution: 1.25dppx) {

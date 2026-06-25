@@ -96,7 +96,7 @@ export const ConvItem = memo(function ConvItem({
           e.stopPropagation();
           onDelete(conversation.id);
         }}
-        className="opacity-0 hoverable:group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 p-1 text-gray-400 hoverable:hover:text-red-500 transition-[opacity,transform] duration-100 ease-press active:scale-95"
+        className="touch-target opacity-0 hoverable:group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 p-1 text-gray-400 hoverable:hover:text-red-500 transition-[opacity,transform] duration-100 ease-press active:scale-95"
         aria-label="Delete conversation"
         title="Delete"
       >
