@@ -22,7 +22,10 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
 
   useEffect(() => {
     if (editing) {
-      editFormRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      editFormRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
   }, [editing]);
 
@@ -143,16 +146,10 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
               </summary>
               <div className="flex flex-col gap-1 mt-1">
                 {catTemplates.map((t) => (
-                  <div
+                  <button
                     key={t.id}
-                    role="button"
-                    tabIndex={0}
-                    className="flex items-center justify-between p-2 rounded-lg text-sm hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 cursor-pointer transition-transform duration-100 ease-press active:scale-95"
+                    className="w-full text-left flex items-center justify-between p-2 rounded-lg text-sm hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 transition-transform duration-100 ease-press active:scale-95"
                     onClick={() => startTemplateCreate(t)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ")
-                        startTemplateCreate(t);
-                    }}
                   >
                     <div className="min-w-0 overflow-hidden">
                       <div className="font-medium truncate">{t.name}</div>
@@ -165,7 +162,7 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
                     <span className="text-xs text-blue-500 shrink-0">
                       Create
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </details>
@@ -233,17 +230,13 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
       )}
 
       {/* User personas */}
-      <div
-        role="button"
-        tabIndex={0}
-        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === null ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
+      <button
+        className={`w-full text-left flex items-center gap-2 p-2 rounded-lg text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === null ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
         onClick={() => onSelect(null)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") onSelect(null);
-        }}
+        aria-pressed={activePersonaId === null}
       >
         <span>No persona</span>
-      </div>
+      </button>
 
       {userPersonas.length === 0 && (
         <div className="text-center text-xs text-gray-400 dark:text-gray-500 py-4 px-2">
@@ -253,42 +246,36 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
       )}
 
       {userPersonas.map((p) => (
-        <div
-          key={p.id}
-          role="button"
-          tabIndex={0}
-          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === p.id ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
-          onClick={() => onSelect(p.id)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") onSelect(p.id);
-          }}
-        >
-          <div>
-            <div className="font-medium">{p.name}</div>
-            {p.isDefault && (
-              <div className="text-xs text-blue-500">default</div>
-            )}
-            <div className="text-xs text-gray-400 dark:text-gray-500 truncate max-w-[140px]">
-              {p.systemPrompt || "No system prompt"}
+        <div key={p.id} className="relative">
+          <button
+            className={`w-full text-left flex items-center justify-between p-2 rounded-lg text-sm transition-transform duration-100 ease-press active:scale-95 ${activePersonaId === p.id ? "bg-blue-100 dark:bg-blue-900" : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"}`}
+            onClick={() => onSelect(p.id)}
+            aria-pressed={activePersonaId === p.id}
+          >
+            <div>
+              <div className="font-medium">{p.name}</div>
+              {p.isDefault && (
+                <div className="text-xs text-blue-500">default</div>
+              )}
+              <div className="text-xs text-gray-400 dark:text-gray-500 truncate max-w-[140px]">
+                {p.systemPrompt || "No system prompt"}
+              </div>
             </div>
-          </div>
-          <div className="flex gap-1">
+            {/* spacer so text doesn't overlap action buttons */}
+            <div className="w-12 flex-shrink-0" />
+          </button>
+          {/* Action buttons — absolutely positioned outside <button> to avoid button nesting */}
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditing(p);
-              }}
+              onClick={() => setEditing(p)}
               className="text-xs text-gray-400 hoverable:hover:text-gray-700 px-1"
+              aria-label={`Edit persona ${p.name}`}
             >
               Edit
             </button>
             {confirmDeleteId === p.id ? (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  remove(p.id);
-                  setConfirmDeleteId(null);
-                }}
+                onClick={() => { remove(p.id); setConfirmDeleteId(null); }}
                 className="text-xs text-red-500 hoverable:hover:text-red-700 px-1 font-medium"
                 aria-label={`Confirm delete persona ${p.name}`}
               >
@@ -296,10 +283,7 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
               </button>
             ) : (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirmDeleteId(p.id);
-                }}
+                onClick={() => setConfirmDeleteId(p.id)}
                 className="text-xs text-red-400 hoverable:hover:text-red-600 px-1"
                 aria-label={`Delete persona ${p.name}`}
               >
@@ -312,7 +296,10 @@ export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
 
       {/* New/edit persona form */}
       {editing && !creatingFromTemplate && (
-        <div ref={editFormRef} className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+        <div
+          ref={editFormRef}
+          className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3"
+        >
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Name
