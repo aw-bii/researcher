@@ -50,9 +50,9 @@ export function SearchPanel({ onSelect, onClose }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
         <svg
-          className="w-4 h-4 text-gray-400 dark:text-gray-500 shrink-0"
+          className="w-4 h-4 text-text-muted shrink-0"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -66,14 +66,14 @@ export function SearchPanel({ onSelect, onClose }: Props) {
         </svg>
         <input
           ref={inputRef}
-          className="flex-1 bg-transparent text-sm outline-none placeholder-gray-400 dark:placeholder-gray-500"
+          className="flex-1 bg-transparent text-sm outline-none placeholder-text-muted"
           placeholder="Search messages..."
           value={query}
           onChange={handleChange}
         />
         <button
           onClick={onClose}
-          className="text-gray-400 hoverable:hover:text-gray-600 dark:hoverable:hover:text-gray-300"
+          className="text-text-muted hoverable:hover:text-text-base"
           aria-label="Close search"
         >
           <svg
@@ -94,19 +94,19 @@ export function SearchPanel({ onSelect, onClose }: Props) {
 
       <div className="flex-1 overflow-y-auto py-2 px-2">
         {!query.trim() && !loading && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-8">
+          <p className="text-xs text-text-muted text-center py-8">
             Type to search
           </p>
         )}
 
         {loading && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-8">
+          <p className="text-xs text-text-muted text-center py-8">
             Searching...
           </p>
         )}
 
         {!loading && results && results.length === 0 && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-8">
+          <p className="text-xs text-text-muted text-center py-8">
             No results
           </p>
         )}
@@ -117,15 +117,15 @@ export function SearchPanel({ onSelect, onClose }: Props) {
               <button
                 key={result.message.id}
                 onClick={() => handleSelect(result)}
-                className="w-full text-left px-3 py-2 rounded-lg hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 transition-colors"
+                className="w-full text-left px-3 py-2 rounded-lg hoverable:hover:bg-bubble transition-colors"
               >
                 <div className="font-semibold text-sm truncate">
                   {result.conversationTitle}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 italic truncate mt-0.5">
+                <div className="text-xs text-text-muted italic truncate mt-0.5">
                   {result.snippet}
                 </div>
-                <span className="inline-block mt-1 text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                <span className="inline-block mt-1 text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-bubble-strong text-text-muted">
                   {result.message.backend}
                 </span>
               </button>

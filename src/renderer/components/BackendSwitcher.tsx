@@ -25,7 +25,7 @@ export const BackendSwitcher = memo(function BackendSwitcher({
   return (
     <div className="flex flex-col gap-0.5">
       <select
-        className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="text-xs px-2 py-1 rounded border border-border-strong bg-surface focus:outline-none focus:ring-2 focus:ring-primary"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -46,7 +46,7 @@ export const BackendSwitcher = memo(function BackendSwitcher({
           className="text-xs text-amber-600 dark:text-amber-400"
         >
           Not signed in — run{" "}
-          <code className="font-mono bg-gray-100 dark:bg-gray-800 px-0.5 rounded">
+          <code className="font-mono bg-bubble px-0.5 rounded">
             {AUTH_COMMANDS[value] ?? `${value} auth login`}
           </code>{" "}
           first

@@ -58,17 +58,17 @@ export function WizardStep3({ statuses: initial, onComplete, onBack }: Props) {
       <div>
         <h2 className="text-sm font-semibold mb-1">Sign in to your AI tools</h2>
         {needsAuth.length > 0 && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-text-muted">
             Open a terminal, run the command for each tool, then click Check.
           </p>
         )}
       </div>
       {needsAuth.length === 0 && (
-        <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+        <div className="flex items-center gap-2 text-sm font-medium text-text-base">
           <CheckCircle
             size={16}
             weight="fill"
-            className="text-blue-600 flex-shrink-0"
+            className="text-primary flex-shrink-0"
           />
           All tools are signed in
         </div>
@@ -76,18 +76,18 @@ export function WizardStep3({ statuses: initial, onComplete, onBack }: Props) {
       {needsAuth.map((s) => (
         <div
           key={s.id}
-          className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-xl p-4"
+          className="flex flex-col gap-2 border border-border rounded-xl p-4"
         >
           <div className="font-medium text-sm">
             {BACKEND_LABELS[s.id] ?? s.id}
           </div>
-          <code className="text-xs bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-lg">
+          <code className="text-xs bg-bubble px-3 py-2 rounded-lg">
             {AUTH_COMMANDS[s.id]}
           </code>
           <button
             onClick={() => recheck(s.id)}
             disabled={s.loading}
-            className="btn-md w-full bg-gray-200 dark:bg-gray-700 hoverable:hover:bg-gray-300 dark:hoverable:hover:bg-gray-600 disabled:opacity-50"
+            className="btn-md w-full bg-bubble-strong hoverable:hover:bg-bubble disabled:opacity-50"
           >
             {s.loading ? "Checking..." : "Check"}
           </button>
@@ -99,19 +99,19 @@ export function WizardStep3({ statuses: initial, onComplete, onBack }: Props) {
         </div>
       ))}
       {needsAuth.length > 0 && (
-        <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
+        <p className="text-xs text-text-muted text-center">
           You can finish and sign in later from Settings.
         </p>
       )}
       <button
         onClick={onComplete}
-        className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
+        className="btn-lg bg-primary text-on-primary hoverable:hover:bg-primary-dark"
       >
         Finish Setup
       </button>
       <button
         onClick={onBack}
-        className="btn-md w-full text-gray-500 dark:text-gray-400 hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-200 transition-transform duration-100 ease-press active:scale-95"
+        className="btn-md w-full text-text-muted hoverable:hover:text-text-base transition-transform duration-100 ease-press active:scale-95"
       >
         Back
       </button>

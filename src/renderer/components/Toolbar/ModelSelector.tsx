@@ -35,7 +35,7 @@ export const ModelSelector = memo(function ModelSelector({
 
   return (
     <select
-      className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none"
+      className="text-xs px-2 py-1 rounded border border-border-strong bg-surface focus:outline-none"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={loading}

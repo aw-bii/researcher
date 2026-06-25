@@ -37,16 +37,16 @@ export function Sidebar({
 }: Props) {
   return (
     <aside
-      className={`flex-shrink-0 flex flex-col h-full overflow-hidden transition-[width] duration-200 ease-press border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 ${
+      className={`flex-shrink-0 flex flex-col h-full overflow-hidden transition-[width] duration-200 ease-press border-r border-border bg-surface-subtle ${
         collapsed ? "w-0" : "w-48 lg:w-64"
       }`}
       style={collapsed ? { minWidth: 0 } : undefined}
     >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <span className="font-semibold text-sm">MyRA</span>
         <button
           onClick={onNew}
-          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
+          className="btn-sm bg-primary text-on-primary hoverable:hover:bg-primary-dark"
         >
           + New
         </button>

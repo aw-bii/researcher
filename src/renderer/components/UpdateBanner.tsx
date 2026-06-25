@@ -34,7 +34,7 @@ export function UpdateBanner() {
   if (!state) return null;
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 text-sm bg-blue-600 text-white">
+    <div className="flex items-center gap-3 px-4 py-2 text-sm bg-primary text-on-primary">
       {state.phase === "available" && (
         <>
           <span className="flex-1">
@@ -42,7 +42,7 @@ export function UpdateBanner() {
           </span>
           <button
             onClick={() => downloadUpdate()}
-            className="px-3 py-0.5 rounded bg-white text-blue-700 font-medium hover:bg-blue-50 transition-colors"
+            className="px-3 py-0.5 rounded bg-on-primary text-primary-dark font-medium hover:bg-primary-ghost transition-colors"
           >
             Download
           </button>
@@ -60,9 +60,9 @@ export function UpdateBanner() {
           <span className="flex-1">
             Downloading update… {Math.round(state.progress)}%
           </span>
-          <div className="w-32 h-1.5 rounded-full bg-blue-400">
+          <div className="w-32 h-1.5 rounded-full bg-primary/60">
             <div
-              className="h-full rounded-full bg-white transition-[width]"
+              className="h-full rounded-full bg-on-primary transition-[width]"
               style={{ width: `${state.progress}%` }}
             />
           </div>
@@ -73,7 +73,7 @@ export function UpdateBanner() {
           <span className="flex-1">Update ready — restart to install.</span>
           <button
             onClick={() => installUpdate()}
-            className="px-3 py-0.5 rounded bg-white text-blue-700 font-medium hover:bg-blue-50 transition-colors"
+            className="px-3 py-0.5 rounded bg-on-primary text-primary-dark font-medium hover:bg-primary-ghost transition-colors"
           >
             Restart now
           </button>

@@ -64,20 +64,20 @@ export function McpPanel() {
       aria-label="MCP Servers"
       className="flex flex-col h-full"
     >
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-xs font-semibold uppercase text-gray-500">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+        <h3 className="text-xs font-semibold uppercase text-text-muted">
           MCP Servers
         </h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="text-xs px-2 py-0.5 rounded bg-blue-600 text-white hoverable:hover:bg-blue-700 transition-transform duration-100 ease-press active:scale-95"
+          className="text-xs px-2 py-0.5 rounded bg-primary text-on-primary hoverable:hover:bg-primary-dark transition-transform duration-100 ease-press active:scale-95"
         >
           {showForm ? "Cancel" : "+ Add"}
         </button>
       </div>
 
       {showForm && (
-        <div className="px-3 py-2 space-y-1.5 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-3 py-2 space-y-1.5 border-b border-border">
           <label
             className="block text-xs font-medium mb-1"
             htmlFor="mcp-server-name"
@@ -89,7 +89,7 @@ export function McpPanel() {
             placeholder="e.g., my-fileserver"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label
             className="block text-xs font-medium mb-1"
@@ -102,7 +102,7 @@ export function McpPanel() {
             placeholder="e.g., npx"
             value={command}
             onChange={(e) => setCommand(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label className="block text-xs font-medium mb-1" htmlFor="mcp-args">
             Arguments
@@ -112,7 +112,7 @@ export function McpPanel() {
             placeholder="e.g., -y @server/filesystem /tmp"
             value={args}
             onChange={(e) => setArgs(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label className="block text-xs font-medium mb-1" htmlFor="mcp-env">
             Env Vars
@@ -123,7 +123,7 @@ export function McpPanel() {
             value={env}
             onChange={(e) => setEnv(e.target.value)}
             rows={2}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <button
             onClick={handleAdd}
@@ -136,7 +136,7 @@ export function McpPanel() {
 
       <div className="flex-1 overflow-y-auto py-1">
         {servers.length === 0 && !showForm && (
-          <p className="text-xs text-gray-400 text-center py-4 px-3 leading-relaxed">
+          <p className="text-xs text-text-muted text-center py-4 px-3 leading-relaxed">
             No servers configured. Add one to extend the AI with external tools.
           </p>
         )}
@@ -144,7 +144,7 @@ export function McpPanel() {
         {servers.map((s) => (
           <div
             key={s.id}
-            className="mx-1 mb-2 p-2 rounded border dark:border-gray-700 bg-white dark:bg-gray-800 text-xs"
+            className="mx-1 mb-2 p-2 rounded border border-border bg-surface text-xs"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="font-medium truncate">{s.name}</span>
@@ -152,19 +152,19 @@ export function McpPanel() {
                 className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] ${
                   s.enabled
                     ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                    : "bg-gray-100 text-gray-500 dark:bg-gray-700"
+                    : "bg-bubble text-text-muted"
                 }`}
               >
                 {s.enabled ? "Enabled" : "Disabled"}
               </span>
             </div>
-            <div className="text-gray-500 dark:text-gray-400 truncate mt-0.5">
+            <div className="text-text-muted truncate mt-0.5">
               {s.command} {s.args.join(" ")}
             </div>
             <div className="flex gap-1 mt-1.5">
               <button
                 onClick={() => handleToggle(s.id)}
-                className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 hoverable:hover:bg-gray-200 dark:hoverable:hover:bg-gray-600 transition-colors"
+                className="text-[10px] px-1.5 py-0.5 rounded bg-bubble hoverable:hover:bg-bubble-strong transition-colors"
               >
                 {s.enabled ? "Disable" : "Enable"}
               </button>
@@ -177,16 +177,16 @@ export function McpPanel() {
             </div>
             {s.tools.length > 0 && (
               <details className="mt-1">
-                <summary className="text-gray-500 dark:text-gray-400 cursor-pointer text-[10px]">
+                <summary className="text-text-muted cursor-pointer text-[10px]">
                   Tools ({s.tools.length})
                 </summary>
                 <ul className="mt-0.5 space-y-0.5">
                   {s.tools.map((t) => (
                     <li
                       key={t.name}
-                      className="text-[10px] text-gray-500 dark:text-gray-400"
+                      className="text-[10px] text-text-muted"
                     >
-                      <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                      <code className="bg-bubble px-1 rounded">
                         {t.name}
                       </code>{" "}
                       {t.description}
@@ -198,8 +198,8 @@ export function McpPanel() {
           </div>
         ))}
 
-        <div className="mx-1 mt-auto pt-2 px-2 pb-2 border-t dark:border-gray-700">
-          <div className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="mx-1 mt-auto pt-2 px-2 pb-2 border-t border-border">
+          <div className="text-xs text-text-muted">
             {tools.length} tool{tools.length !== 1 ? "s" : ""} available
           </div>
           {tools.length > 0 && (
@@ -207,7 +207,7 @@ export function McpPanel() {
               {tools.map((t) => (
                 <span
                   key={`${t.serverId}-${t.name}`}
-                  className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded cursor-default"
+                  className="text-[10px] bg-bubble px-1.5 py-0.5 rounded cursor-default"
                   title={t.description}
                 >
                   {t.name}

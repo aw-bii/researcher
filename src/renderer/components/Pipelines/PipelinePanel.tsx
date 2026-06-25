@@ -105,7 +105,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
         <div className="flex items-center gap-1">
           <button
             onClick={startNew}
-            className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
+            className="btn-sm bg-primary text-on-primary hoverable:hover:bg-primary-dark"
           >
             + New
           </button>
@@ -113,7 +113,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
             <button
               onClick={onClose}
               aria-label="Close pipelines"
-              className="p-1 text-gray-400 hoverable:hover:text-gray-600 dark:hoverable:hover:text-gray-300 rounded"
+              className="p-1 text-text-muted hoverable:hover:text-text-base rounded"
             >
               ✕
             </button>
@@ -122,7 +122,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
       </div>
 
       {templates.length === 0 ? (
-        <div className="text-center text-xs text-gray-400 py-4">
+        <div className="text-center text-xs text-text-muted py-4">
           No pipeline templates yet. Create one to chain multiple backends in
           sequence.
         </div>
@@ -132,8 +132,8 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
             key={t.id}
             className={`flex items-center justify-between p-2 rounded-lg text-sm ${
               activeTemplateId === t.id
-                ? "bg-blue-100 dark:bg-blue-900"
-                : "hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800"
+                ? "bg-primary-ghost"
+                : "hoverable:hover:bg-bubble"
             }`}
           >
             <div
@@ -149,7 +149,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
               }}
             >
               <div className="font-medium truncate">{t.name}</div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-text-muted">
                 {t.steps.length} steps
               </div>
             </div>
@@ -166,7 +166,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
                     })),
                   })
                 }
-                className="text-xs text-gray-400 hoverable:hover:text-gray-700 px-1"
+                className="text-xs text-text-muted hoverable:hover:text-text-base px-1"
               >
                 Edit
               </button>
@@ -183,13 +183,13 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
       )}
 
       {editing && (
-        <div className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+        <div className="flex flex-col gap-2 border border-border rounded-lg p-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-text-base">
               Template name
             </label>
             <input
-              className="text-sm border rounded-lg px-2 py-1.5 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="text-sm border border-border-strong rounded-lg px-2 py-1.5 bg-surface focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="e.g. Draft → Review"
               value={editing.name}
               onChange={(e) =>
@@ -203,9 +203,9 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
           <div className="flex flex-col gap-1">
             {editing.steps.map((step, idx) => (
               <div key={idx} className="flex items-center gap-1">
-                <span className="text-xs text-gray-400 w-4">{idx + 1}.</span>
+                <span className="text-xs text-text-muted w-4">{idx + 1}.</span>
                 <select
-                  className="text-xs border rounded-lg px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
+                  className="text-xs border border-border-strong rounded-lg px-1 py-1 bg-surface flex-1"
                   value={step.backendId}
                   onChange={(e) =>
                     setEditing((prev) => {
@@ -223,7 +223,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
                   ))}
                 </select>
                 <select
-                  className="text-xs border rounded-lg px-1 py-1 dark:bg-gray-800 dark:border-gray-600 flex-1"
+                  className="text-xs border border-border-strong rounded-lg px-1 py-1 bg-surface flex-1"
                   value={step.personaId ?? ""}
                   onChange={(e) =>
                     setEditing((prev) => {
@@ -246,13 +246,13 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
                 </select>
                 <button
                   onClick={() => moveStep(idx, -1)}
-                  className="text-xs text-gray-400 hoverable:hover:text-gray-600 px-1"
+                  className="text-xs text-text-muted hoverable:hover:text-text-base px-1"
                 >
                   ↑
                 </button>
                 <button
                   onClick={() => moveStep(idx, 1)}
-                  className="text-xs text-gray-400 hoverable:hover:text-gray-600 px-1"
+                  className="text-xs text-text-muted hoverable:hover:text-text-base px-1"
                 >
                   ↓
                 </button>
@@ -269,7 +269,7 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
 
           <button
             onClick={addStep}
-            className="text-xs text-blue-500 hoverable:hover:text-blue-700 text-left transition-transform duration-100 ease-press active:scale-95"
+            className="text-xs text-primary hoverable:hover:text-primary-dark text-left transition-transform duration-100 ease-press active:scale-95"
           >
             + Add step
           </button>
@@ -278,13 +278,13 @@ export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
             <button
               onClick={submit}
               disabled={!editing.name || editing.steps.length < 2}
-              className="btn-md flex-1 bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
+              className="btn-md flex-1 bg-primary text-on-primary hoverable:hover:bg-primary-dark disabled:opacity-50"
             >
               Save
             </button>
             <button
               onClick={cancel}
-              className="btn-md flex-1 border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-50 dark:hoverable:hover:bg-gray-800"
+              className="btn-md flex-1 border border-border-strong hoverable:hover:bg-bubble"
             >
               Cancel
             </button>

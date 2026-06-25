@@ -28,8 +28,13 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
     const addLine = (line: string) =>
       setLogs((prev) => ({ ...prev, [id]: [...(prev[id] ?? []), line] }));
 
-    const off = window.ipc.on("wizard:install:line", (line: unknown) =>
-      addLine(String(line)),
+    const off = window.ipc.on(
+      "wizard:install:line",
+      (evtBackend: unknown, line: unknown) => {
+        if (evtBackend === id) {
+          addLine(String(line));
+        }
+      },
     );
     const { success: ok, error } = await installBackend(id);
     off();
@@ -49,19 +54,19 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
       <div className="flex flex-col gap-6">
         <div>
           <h2 className="text-sm font-semibold mb-1">All tools found</h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-text-muted">
             Every AI tool was detected on your system.
           </p>
         </div>
         <button
           onClick={onNext}
-          className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
-        >
-          Next
-        </button>
-        <button
-          onClick={onBack}
-          className="btn-md w-full text-gray-500 dark:text-gray-400 hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-200 transition-transform duration-100 ease-press active:scale-95"
+          className="btn-lg bg-primary text-on-primary hoverable:hover:bg-primary-dark"
+          >
+            Next
+          </button>
+          <button
+            onClick={onBack}
+            className="btn-md w-full text-text-muted hoverable:hover:text-text-base transition-transform duration-100 ease-press active:scale-95"
         >
           Back
         </button>
@@ -73,14 +78,14 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-sm font-semibold mb-1">Install additional tools</h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-text-muted">
           These are optional. You can skip and install them from Settings later.
         </p>
       </div>
       {missing.map((id) => (
         <div
           key={id}
-          className="flex flex-col gap-2 border border-gray-200 dark:border-gray-700 rounded-xl p-4"
+          className="flex flex-col gap-2 border border-border rounded-xl p-4"
         >
           <div className="flex items-center justify-between">
             <span className="font-medium text-sm">{LABELS[id] ?? id}</span>
@@ -88,7 +93,7 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
               <button
                 onClick={() => install(id)}
                 disabled={installing[id] || done[id]}
-                className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700 disabled:opacity-50"
+                className="btn-sm bg-primary text-on-primary hoverable:hover:bg-primary-dark disabled:opacity-50"
               >
                 {done[id]
                   ? "Installed"
@@ -99,7 +104,7 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
               <button
                 onClick={() => setDone((prev) => ({ ...prev, [id]: true }))}
                 disabled={done[id]}
-                className="btn-sm border border-gray-300 dark:border-gray-600 hoverable:hover:bg-gray-100 dark:hoverable:hover:bg-gray-800 disabled:opacity-30"
+                className="btn-sm border border-border-strong hoverable:hover:bg-bubble disabled:opacity-30"
               >
                 Skip
               </button>
@@ -115,13 +120,13 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
       ))}
       <button
         onClick={onNext}
-        className="btn-lg bg-blue-600 text-white hoverable:hover:bg-blue-700"
-      >
-        Continue
-      </button>
-      <button
-        onClick={onBack}
-        className="btn-md w-full text-gray-500 dark:text-gray-400 hoverable:hover:text-gray-700 dark:hoverable:hover:text-gray-200 transition-transform duration-100 ease-press active:scale-95"
+        className="btn-lg bg-primary text-on-primary hoverable:hover:bg-primary-dark"
+        >
+          Continue
+        </button>
+        <button
+          onClick={onBack}
+          className="btn-md w-full text-text-muted hoverable:hover:text-text-base transition-transform duration-100 ease-press active:scale-95"
       >
         Back
       </button>

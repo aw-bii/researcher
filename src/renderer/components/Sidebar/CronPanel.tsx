@@ -65,20 +65,20 @@ export function CronPanel() {
 
   return (
     <div role="region" aria-label="Cron Jobs" className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-xs font-semibold uppercase text-gray-500">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+        <h3 className="text-xs font-semibold uppercase text-text-muted">
           Scheduled Jobs
         </h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="text-xs px-2 py-0.5 rounded bg-blue-600 text-white hoverable:hover:bg-blue-700 transition-transform duration-100 ease-press active:scale-95"
+          className="text-xs px-2 py-0.5 rounded bg-primary text-on-primary hoverable:hover:bg-primary-dark transition-transform duration-100 ease-press active:scale-95"
         >
           {showForm ? "Cancel" : "+ New"}
         </button>
       </div>
 
       {showForm && (
-        <div className="px-3 py-2 space-y-1.5 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-3 py-2 space-y-1.5 border-b border-border">
           <label className="block text-xs font-medium mb-1" htmlFor="cron-name">
             Name
           </label>
@@ -87,7 +87,7 @@ export function CronPanel() {
             placeholder="e.g., Daily standup"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label
             className="block text-xs font-medium mb-1"
@@ -100,7 +100,7 @@ export function CronPanel() {
             placeholder="e.g., 0 9 * * 1-5"
             value={cronExpression}
             onChange={(e) => setCronExpression(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label
             className="block text-xs font-medium mb-1"
@@ -114,7 +114,7 @@ export function CronPanel() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             rows={2}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <label
             className="block text-xs font-medium mb-1"
@@ -126,7 +126,7 @@ export function CronPanel() {
             id="cron-backend"
             value={backend}
             onChange={(e) => setBackend(e.target.value)}
-            className="w-full text-xs border rounded px-2 py-1 dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full text-xs border border-border-strong rounded px-2 py-1 bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="claude">Claude Code</option>
             <option value="gemini">Gemini CLI</option>
@@ -143,7 +143,7 @@ export function CronPanel() {
 
       <div className="flex-1 overflow-y-auto py-1">
         {jobs.length === 0 && !showForm && (
-          <p className="text-xs text-gray-400 text-center py-4 px-3 leading-relaxed">
+          <p className="text-xs text-text-muted text-center py-4 px-3 leading-relaxed">
             No scheduled jobs yet. Create one to automate recurring tasks.
           </p>
         )}
@@ -151,12 +151,12 @@ export function CronPanel() {
           {jobs.map((job) => (
             <li
               key={job.id}
-              className="text-xs p-2 rounded border dark:border-gray-700 bg-white dark:bg-gray-800"
+              className="text-xs p-2 rounded border border-border bg-surface"
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <div className="font-medium truncate">{job.name}</div>
-                  <div className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
+                  <div className="text-[10px] text-text-muted truncate">
                     {job.cronExpression}
                   </div>
                 </div>
@@ -175,19 +175,19 @@ export function CronPanel() {
               <div className="flex gap-1 mt-1.5 flex-wrap">
                 <button
                   onClick={() => handleToggle(job.id)}
-                  className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 hoverable:hover:bg-gray-200 dark:hoverable:hover:bg-gray-600 transition-[background-color,transform] duration-100 ease-press active:scale-95"
+                  className="text-[10px] px-1.5 py-0.5 rounded bg-bubble hoverable:hover:bg-bubble-strong transition-[background-color,transform] duration-100 ease-press active:scale-95"
                 >
                   {job.status === "active" ? "Pause" : "Resume"}
                 </button>
                 <button
                   onClick={() => handleRunNow(job.id)}
-                  className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 hoverable:hover:bg-gray-200 dark:hoverable:hover:bg-gray-600 transition-[background-color,transform] duration-100 ease-press active:scale-95"
+                  className="text-[10px] px-1.5 py-0.5 rounded bg-bubble hoverable:hover:bg-bubble-strong transition-[background-color,transform] duration-100 ease-press active:scale-95"
                 >
                   Run now
                 </button>
                 <button
                   onClick={() => toggleLogs(job.id)}
-                  className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 hoverable:hover:bg-gray-200 dark:hoverable:hover:bg-gray-600 transition-[background-color,transform] duration-100 ease-press active:scale-95"
+                  className="text-[10px] px-1.5 py-0.5 rounded bg-bubble hoverable:hover:bg-bubble-strong transition-[background-color,transform] duration-100 ease-press active:scale-95"
                 >
                   Logs
                 </button>
@@ -199,14 +199,14 @@ export function CronPanel() {
                 </button>
               </div>
               {expandedJob === job.id && logs[job.id] && (
-                <div className="mt-1 max-h-24 overflow-y-auto border-t pt-1 dark:border-gray-700">
+                <div className="mt-1 max-h-24 overflow-y-auto border-t border-border pt-1">
                   {logs[job.id].length === 0 && (
-                    <div className="text-[10px] text-gray-400">No logs</div>
+                    <div className="text-[10px] text-text-muted">No logs</div>
                   )}
                   {logs[job.id].map((log) => (
                     <div
                       key={log.id}
-                      className="flex items-center gap-1 text-[10px] text-gray-500"
+                      className="flex items-center gap-1 text-[10px] text-text-muted"
                     >
                       <span
                         className={
