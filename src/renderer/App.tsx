@@ -416,7 +416,7 @@ function App() {
             className={`overflow-hidden transition-[width] duration-200 ease-drawer flex-shrink-0 ${
               showPersonas ? "border-l border-gray-200 dark:border-gray-700" : ""
             }`}
-            style={{ width: showPersonas ? (viewportLg ? 256 : 224) : 0, willChange: "width" }}
+            style={{ width: showPersonas ? `min(${viewportLg ? 256 : 224}px, 80vw)` : 0, willChange: "width" }}
           >
             <div className="w-56 lg:w-64 overflow-y-auto h-full">
               <PersonaPanel
@@ -430,7 +430,7 @@ function App() {
             className={`overflow-hidden transition-[width] duration-200 ease-drawer flex-shrink-0 ${
               showPipelines ? "border-l border-gray-200 dark:border-gray-700" : ""
             }`}
-            style={{ width: showPipelines ? (viewportLg ? 256 : 224) : 0, willChange: "width" }}
+            style={{ width: showPipelines ? `min(${viewportLg ? 256 : 224}px, 80vw)` : 0, willChange: "width" }}
           >
             <div className="w-56 lg:w-64 overflow-y-auto h-full">
               <PipelinePanel
@@ -447,7 +447,7 @@ function App() {
             className={`overflow-hidden transition-[width] duration-200 ease-drawer flex-shrink-0 ${
               showSettings ? "border-l border-gray-200 dark:border-gray-700" : ""
             }`}
-            style={{ width: showSettings ? (viewportLg ? 256 : 224) : 0, willChange: "width" }}
+            style={{ width: showSettings ? `min(${viewportLg ? 256 : 224}px, 80vw)` : 0, willChange: "width" }}
           >
             <SettingsPanel
               onClose={() => setShowSettings(false)}
