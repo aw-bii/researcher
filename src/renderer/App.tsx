@@ -422,6 +422,7 @@ function App() {
               <PersonaPanel
                 activePersonaId={personaId}
                 onSelect={setPersonaId}
+                onClose={() => togglePanel("personas")}
               />
             </div>
           </div>
@@ -438,6 +439,7 @@ function App() {
                   setSelectedTemplate(t);
                   setMode("pipeline");
                 }}
+                onClose={() => togglePanel("pipelines")}
               />
             </div>
           </div>

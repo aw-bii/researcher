@@ -5,9 +5,10 @@ import type { Persona } from "../../../shared/types";
 interface Props {
   activePersonaId: string | null;
   onSelect: (id: string | null) => void;
+  onClose?: () => void;
 }
 
-export function PersonaPanel({ activePersonaId, onSelect }: Props) {
+export function PersonaPanel({ activePersonaId, onSelect, onClose }: Props) {
   const { personas, save, remove } = usePersonas();
   const [editing, setEditing] = useState<Partial<Persona> | null>(null);
   const [creatingFromTemplate, setCreatingFromTemplate] =
@@ -110,12 +111,23 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
     <div className="p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-sm">Personas</h3>
-        <button
-          onClick={startNew}
-          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
-        >
-          + New
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={startNew}
+            className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
+          >
+            + New
+          </button>
+          {onClose && (
+            <button
+              onClick={onClose}
+              aria-label="Close personas"
+              className="p-1 text-gray-400 hoverable:hover:text-gray-600 dark:hoverable:hover:text-gray-300 rounded"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Templates section */}
@@ -142,10 +154,10 @@ export function PersonaPanel({ activePersonaId, onSelect }: Props) {
                         startTemplateCreate(t);
                     }}
                   >
-                    <div>
-                      <div className="font-medium">{t.name}</div>
+                    <div className="min-w-0 overflow-hidden">
+                      <div className="font-medium truncate">{t.name}</div>
                       {t.description && (
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-gray-400 truncate">
                           {t.description}
                         </div>
                       )}

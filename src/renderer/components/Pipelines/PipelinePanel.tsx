@@ -19,9 +19,10 @@ interface EditingTemplate {
 interface Props {
   activeTemplateId: string | null;
   onSelect: (template: PipelineTemplate) => void;
+  onClose?: () => void;
 }
 
-export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
+export function PipelinePanel({ activeTemplateId, onSelect, onClose }: Props) {
   const { templates, save, remove } = usePipelines();
   const { personas } = usePersonas();
   const { backends } = useBackends();
@@ -101,12 +102,23 @@ export function PipelinePanel({ activeTemplateId, onSelect }: Props) {
     <div className="p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-sm">Pipelines</h3>
-        <button
-          onClick={startNew}
-          className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
-        >
-          + New
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={startNew}
+            className="btn-sm bg-blue-600 text-white hoverable:hover:bg-blue-700"
+          >
+            + New
+          </button>
+          {onClose && (
+            <button
+              onClick={onClose}
+              aria-label="Close pipelines"
+              className="p-1 text-gray-400 hoverable:hover:text-gray-600 dark:hoverable:hover:text-gray-300 rounded"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {templates.length === 0 ? (
