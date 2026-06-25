@@ -53,3 +53,44 @@ describe("MessageBubble", () => {
     expect(timestampEl).toHaveClass("text-blue-100");
   });
 });
+
+describe("MessageBubble accessibility", () => {
+  const userMsg: Message = {
+    id: "m1",
+    role: "user",
+    content: "Hello",
+    conversationId: "c1",
+    backend: "claude",
+    stepIndex: null,
+    createdAt: 1719313200000, // 2026-06-25T10:00:00.000Z
+  };
+
+  const assistantMsg: Message = {
+    id: "m2",
+    role: "assistant",
+    content: "Hi there",
+    conversationId: "c1",
+    backend: "claude",
+    stepIndex: null,
+    createdAt: 1719313200000, // 2026-06-25T10:00:00.000Z
+  };
+
+  it("user bubble has aria-label identifying sender", () => {
+    render(<MessageBubble message={userMsg} />);
+    expect(screen.getByRole("article", { name: /your message/i })).toBeTruthy();
+  });
+
+  it("assistant bubble has aria-label identifying sender", () => {
+    render(<MessageBubble message={assistantMsg} />);
+    expect(screen.getByRole("article", { name: /assistant message/i })).toBeTruthy();
+  });
+
+  it("timestamp uses <time> element with datetime attribute", () => {
+    const { container } = render(<MessageBubble message={userMsg} />);
+    const timeEl = container.querySelector("time");
+    expect(timeEl).not.toBeNull();
+    expect(timeEl?.getAttribute("dateTime")).toBe(
+      new Date(userMsg.createdAt).toISOString()
+    );
+  });
+});

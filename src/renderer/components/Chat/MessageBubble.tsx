@@ -39,6 +39,7 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
         role="article"
+        aria-label={isUser ? "Your message" : "Assistant message"}
         className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
           isUser
             ? "bg-blue-600 text-white"
@@ -60,7 +61,10 @@ export const MessageBubble = memo(function MessageBubble({ message }: Props) {
             isUser ? "text-blue-100" : "text-gray-400 dark:text-gray-500"
           }`}
         >
-          {message.backend} · {new Date(message.createdAt).toLocaleTimeString()}
+          {message.backend} ·{" "}
+          <time dateTime={new Date(message.createdAt).toISOString()}>
+            {new Date(message.createdAt).toLocaleTimeString()}
+          </time>
         </div>
       </div>
     </div>
