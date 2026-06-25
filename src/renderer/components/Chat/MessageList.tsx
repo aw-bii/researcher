@@ -6,9 +6,12 @@ interface Props {
   messages: Message[];
   streaming: boolean;
   conversationId: string | null;
+  id?: string;
+  "aria-labelledby"?: string;
+  role?: string;
 }
 
-export function MessageList({ messages, streaming, conversationId }: Props) {
+export function MessageList({ messages, streaming, conversationId, id, "aria-labelledby": ariaLabelledBy, role = "log" }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Track which message IDs have been shown. Seeded with all current IDs
@@ -38,9 +41,11 @@ export function MessageList({ messages, streaming, conversationId }: Props) {
 
   return (
     <div
+      id={id}
+      aria-labelledby={ariaLabelledBy}
       className="flex-1 overflow-y-auto px-4 py-4"
       aria-live="polite"
-      role="log"
+      role={role}
     >
       {messages.map((msg) => {
         const isNew = !seenIdsRef.current.has(msg.id);

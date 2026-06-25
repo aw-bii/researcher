@@ -120,10 +120,18 @@ function PipelineChatView({
   return (
     <div className="flex flex-col h-full">
       {/* Step tabs */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+      <div
+        role="tablist"
+        aria-label="Pipeline steps"
+        className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
+      >
         {template.steps.map((step, i) => (
           <button
             key={i}
+            role="tab"
+            aria-selected={activeTabIndex === i}
+            aria-controls={`step-panel-${i}`}
+            id={`step-tab-${i}`}
             onClick={() => !streaming && setActiveTabIndex(i)}
             className={`px-3 py-2 text-xs whitespace-nowrap border-b-2 transition-colors transition-transform duration-100 ease-press active:scale-95 ${
               activeTabIndex === i
@@ -149,6 +157,9 @@ function PipelineChatView({
       )}
       {activeMessages.length > 0 && (
         <MessageList
+          id={`step-panel-${activeTabIndex}`}
+          aria-labelledby={`step-tab-${activeTabIndex}`}
+          role="tabpanel"
           messages={activeMessages}
           streaming={streaming && streamingStepIndex === activeTabIndex}
           conversationId={conversationId}
