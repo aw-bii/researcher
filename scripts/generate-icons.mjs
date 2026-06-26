@@ -11,31 +11,18 @@ function ensureDir(p) {
 }
 
 // ─── SVG — vector source of truth ─────────────────────────
+// Prism icon: three white triangular beams on Ink Blue field.
+// Multiple AI backends converging into a single unified interface.
 const SVG_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="96" fill="url(#g)"/>
-  <text x="256" y="300" font-family="Arial, sans-serif" font-size="240" font-weight="bold" fill="white" text-anchor="middle">B</text>
-  <circle cx="380" cy="140" r="48" fill="#60A5FA"/>
+  <rect width="512" height="512" rx="80" fill="#2563EB"/>
+  <polygon points="48,96 164,96 256,432" fill="white"/>
+  <polygon points="200,96 312,96 256,432" fill="white"/>
+  <polygon points="348,96 464,96 256,432" fill="white"/>
 </svg>`
 
 // ─── Raster helpers ───────────────────────────────────────
 const clamp = v => Math.max(0, Math.min(255, v))
 const lerp = (a, b, t) => a + (b - a) * t
-
-function sdBox(px, py, cx, cy, w, h) {
-  const dx = Math.abs(px - cx) - w / 2
-  const dy = Math.abs(py - cy) - h / 2
-  return Math.max(dx, dy)
-}
-
-function sdCircle(px, py, cx, cy, r) {
-  return Math.hypot(px - cx, py - cy) - r
-}
 
 function sdRoundedRect(px, py, cx, cy, w, h, r) {
   const hw = w / 2, hh = h / 2
@@ -45,54 +32,63 @@ function sdRoundedRect(px, py, cx, cy, w, h, r) {
   return Math.hypot(Math.max(rx - hw, 0), Math.max(ry - hh, 0)) - r
 }
 
+// Returns true if (px,py) is inside triangle (ax,ay)-(bx,by)-(cx,cy)
+function pointInTriangle(px, py, ax, ay, bx, by, cx, cy) {
+  const d1 = (px - bx) * (ay - by) - (ax - bx) * (py - by)
+  const d2 = (px - cx) * (by - cy) - (bx - cx) * (py - cy)
+  const d3 = (px - ax) * (cy - ay) - (cx - ax) * (py - ay)
+  const hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0)
+  const hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0)
+  return !(hasNeg && hasPos)
+}
+
 // ─── 256×256 RGBA pixel generation ────────────────────────
 const SIZE = 256
-const CORNER_R = 48
+const CORNER_R = 40  // 80px at 512px → 40px at 256px
 const data = Buffer.alloc(SIZE * SIZE * 4, 0)
 
-const BG1 = [59, 130, 246, 255]
-const BG2 = [29, 78, 216, 255]
-const ACCENT = [96, 165, 250, 255]
+const BG = [37, 99, 235]  // #2563EB
+
+// Prism triangles at 256px scale (512÷2). Three beams converging to bottom center.
+const S = 0.5
+const T1 = [48*S, 96*S,  164*S, 96*S, 256*S, 432*S]  // left beam
+const T2 = [200*S, 96*S, 312*S, 96*S, 256*S, 432*S]  // center beam
+const T3 = [348*S, 96*S, 464*S, 96*S, 256*S, 432*S]  // right beam
+
+// 5×5 supersampling for anti-aliased triangle edges
+const SSAA = 5
 
 for (let y = 0; y < SIZE; y++) {
   for (let x = 0; x < SIZE; x++) {
-    const px = x / SIZE
-    const py = y / SIZE
     const idx = (y * SIZE + x) * 4
 
     const bgDist = sdRoundedRect(x, y, SIZE / 2, SIZE / 2, SIZE * 0.92, SIZE * 0.92, CORNER_R)
     const bgAlpha = clamp(Math.round((1 - bgDist * 4) * 255))
     if (bgAlpha <= 0) { data[idx + 3] = 0; continue }
 
-    const grad = (px + py) / 2
-    let rCol = lerp(BG1[0], BG2[0], grad)
-    let gCol = lerp(BG1[1], BG2[1], grad)
-    let bCol = lerp(BG1[2], BG2[2], grad)
+    let rCol = BG[0], gCol = BG[1], bCol = BG[2]
 
-    // B letter — SDF union of bars and lobes
-    const leftBar = sdBox(x, y, SIZE * 0.36, SIZE * 0.5, SIZE * 0.08, SIZE * 0.46)
-    const topBar = sdBox(x, y, SIZE * 0.51, SIZE * 0.19, SIZE * 0.22, SIZE * 0.06)
-    const midBar = sdBox(x, y, SIZE * 0.49, SIZE * 0.5, SIZE * 0.18, SIZE * 0.06)
-    const botBar = sdBox(x, y, SIZE * 0.51, SIZE * 0.81, SIZE * 0.22, SIZE * 0.06)
-
-    const lobeCX = SIZE * 0.58
-    const topLobe = sdCircle(x, y, lobeCX, SIZE * 0.19, SIZE * 0.10)
-    const botLobe = sdCircle(x, y, lobeCX, SIZE * 0.81, SIZE * 0.10)
-    const clip = SIZE * 0.38 - x
-    const bDist = Math.min(leftBar, topBar, midBar, botBar, Math.max(topLobe, clip), Math.max(botLobe, clip))
-
-    if (bDist < 0) { rCol = 255; gCol = 255; bCol = 255 }
-
-    // Accent dot top-right
-    const aDist = sdCircle(x, y, SIZE * 0.78, SIZE * 0.22, SIZE * 0.06)
-    if (aDist < 0) {
-      const t = clamp(1 + aDist * 3)
-      rCol = lerp(rCol, ACCENT[0], t)
-      gCol = lerp(gCol, ACCENT[1], t)
-      bCol = lerp(bCol, ACCENT[2], t)
+    // Count sub-pixel samples inside any prism beam (5×5 = 25 samples)
+    let hits = 0
+    for (let sy = 0; sy < SSAA; sy++) {
+      for (let sx = 0; sx < SSAA; sx++) {
+        const px = x + (sx + 0.5) / SSAA
+        const py = y + (sy + 0.5) / SSAA
+        if (
+          pointInTriangle(px, py, T1[0], T1[1], T1[2], T1[3], T1[4], T1[5]) ||
+          pointInTriangle(px, py, T2[0], T2[1], T2[2], T2[3], T2[4], T2[5]) ||
+          pointInTriangle(px, py, T3[0], T3[1], T3[2], T3[3], T3[4], T3[5])
+        ) hits++
+      }
+    }
+    const mAlpha = hits / (SSAA * SSAA)
+    if (mAlpha > 0) {
+      rCol = lerp(rCol, 255, mAlpha)
+      gCol = lerp(gCol, 255, mAlpha)
+      bCol = lerp(bCol, 255, mAlpha)
     }
 
-    data[idx] = clamp(Math.round(rCol))
+    data[idx]     = clamp(Math.round(rCol))
     data[idx + 1] = clamp(Math.round(gCol))
     data[idx + 2] = clamp(Math.round(bCol))
     data[idx + 3] = bgAlpha

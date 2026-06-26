@@ -1,6 +1,4 @@
-import type { Configuration } from "electron-builder";
-
-export default {
+module.exports = {
   appId: "com.bii.myra",
   productName: "MyRA",
   directories: { output: "dist" },
@@ -29,4 +27,4 @@ export default {
     repo: "MyRA",
     releaseType: "release",
   },
-} satisfies Configuration;
+}
