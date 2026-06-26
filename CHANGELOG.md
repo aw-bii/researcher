@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1] — 2026-06-26
+
+### Documentation
+
+- Landing page (`index.html`) copy humanized — removed em-dashes, softened marketing language
+- Backends section added to landing page listing all 8 supported adapters
+- v0.2 badge and "Works With" section removed from landing page for cleaner look
+- Landing page renamed from `landing.html` to `index.html` for GitHub Pages root serving
+- `.nojekyll` added to prevent Jekyll from processing plan artefacts
+
 ## [0.2.0] — 2026-06-25
 
 ### Bug Fixes
