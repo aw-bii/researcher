@@ -59,19 +59,11 @@ export const MessageList = memo(function MessageList({ messages, streaming, conv
       })}
       {streaming && (
         <div className="flex justify-start mb-3">
-          <div className="bg-bubble rounded-2xl px-4 py-3 flex items-center gap-1.5">
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-text-muted animate-dot-fade"
-              style={{ animationDelay: "0ms" }}
-            />
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-text-muted animate-dot-fade"
-              style={{ animationDelay: "200ms" }}
-            />
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-text-muted animate-dot-fade"
-              style={{ animationDelay: "400ms" }}
-            />
+          <div
+            data-testid="streaming-indicator"
+            className="bg-bubble rounded-2xl px-4 py-3 text-text-muted text-sm"
+          >
+            ...
           </div>
         </div>
       )}
