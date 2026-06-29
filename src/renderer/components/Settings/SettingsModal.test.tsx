@@ -106,4 +106,11 @@ describe("SettingsModal", () => {
     fireEvent.click(screen.getByRole("button", { name: /close settings/i }));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it("does not call onClose when clicking inside modal", () => {
+    const onClose = vi.fn();
+    render(<SettingsModal {...base} onClose={onClose} />);
+    fireEvent.click(screen.getByRole("dialog"));
+    expect(onClose).not.toHaveBeenCalled();
+  });
 });
