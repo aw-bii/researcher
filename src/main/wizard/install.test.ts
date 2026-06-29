@@ -84,12 +84,25 @@ describe("installBackend", () => {
     expect(child_process.spawn).not.toHaveBeenCalled();
   });
 
+  it("uses curl for opencode, not npm", async () => {
+    vi.mocked(child_process.spawn).mockReturnValue(makeMockProcess(0));
+
+    const result = await installBackend("opencode", vi.fn());
+
+    expect(result).toEqual({ success: true });
+    expect(child_process.spawn).toHaveBeenCalledWith(
+      "sh",
+      expect.arrayContaining([expect.stringContaining("opencode.ai/install")]),
+      expect.objectContaining({ stdio: "pipe" }),
+    );
+  });
+
   it("returns permission-error message when stderr contains EACCES", async () => {
     vi.mocked(child_process.spawn).mockReturnValue(
       makeMockProcess(1, "npm ERR! EACCES: permission denied"),
     );
 
-    const result = await installBackend("opencode", vi.fn());
+    const result = await installBackend("gemini", vi.fn());
 
     expect(result.success).toBe(false);
     expect(result.error).toMatch(/Permission denied/i);

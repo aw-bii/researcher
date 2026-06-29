@@ -1,22 +1,27 @@
 import { spawn, execSync } from "child_process";
 import { getDb } from "../store/db";
 
-const INSTALL_COMMANDS: Record<string, [string, string[]]> = {
-  gemini: ["npm", ["install", "-g", "@google/gemini-cli"]],
-  opencode: ["npm", ["install", "-g", "opencode"]],
-};
+type InstallCommand =
+  | { type: "npm"; pkg: string }
+  | { type: "curl"; url: string; shell: "sh" | "pwsh" };
 
-function canSpawnNpm(): { ok: boolean; error?: string } {
-  try {
-    execSync("npm --version", { stdio: "pipe", timeout: 5000 });
-    return { ok: true };
-  } catch {
-    return {
-      ok: false,
-      error: "npm not found in PATH. Install Node.js from https://nodejs.org",
-    };
-  }
-}
+const INSTALL_COMMANDS: Record<
+  string,
+  InstallCommand | ((platform: string) => InstallCommand)
+> = {
+  claude: { type: "curl", url: "https://claude.ai/install.sh", shell: "sh" },
+  gemini: { type: "npm", pkg: "@google/gemini-cli" },
+  opencode: { type: "curl", url: "https://opencode.ai/install", shell: "sh" },
+  ollama: (platform: string) =>
+    platform === "win32"
+      ? { type: "curl", url: "https://ollama.com/install.ps1", shell: "pwsh" }
+      : { type: "curl", url: "https://ollama.com/install.sh", shell: "sh" },
+  codex: {
+    type: "curl",
+    url: "https://chatgpt.com/codex/install.sh",
+    shell: "sh",
+  },
+};
 
 function getProxyEnv(): Record<string, string> {
   try {
@@ -53,21 +58,45 @@ export function installBackend(
   id: string,
   onData: (line: string) => void,
 ): Promise<{ success: boolean; error?: string }> {
-  const cmd = INSTALL_COMMANDS[id];
-  if (!cmd)
+  const cmdDef = INSTALL_COMMANDS[id];
+  if (!cmdDef) {
     return Promise.resolve({ success: false, error: `Unknown backend: ${id}` });
+  }
 
-  const check = canSpawnNpm();
-  if (!check.ok) return Promise.resolve({ success: false, error: check.error });
-
-  const [binary, args] = cmd;
+  const cmd = typeof cmdDef === "function" ? cmdDef(process.platform) : cmdDef;
   const isWin = process.platform === "win32";
+  const env = { ...process.env, ...getProxyEnv() };
+
+  let binary: string;
+  let args: string[];
+
+  if (cmd.type === "npm") {
+    try {
+      execSync("npm --version", { stdio: "pipe", timeout: 5000 });
+    } catch {
+      return Promise.resolve({
+        success: false,
+        error: "npm not found in PATH. Install Node.js from https://nodejs.org",
+      });
+    }
+    binary = "npm";
+    args = ["install", "-g", cmd.pkg];
+  } else {
+    // curl | sh or curl | pwsh
+    if (cmd.shell === "pwsh") {
+      binary = "powershell.exe";
+      args = ["-Command", `irm ${cmd.url} | iex`];
+    } else {
+      binary = "sh";
+      args = ["-c", `curl -fsSL ${cmd.url} | sh`];
+    }
+  }
 
   return new Promise((resolve) => {
     const p = spawn(binary, args, {
       stdio: "pipe",
-      shell: isWin,
-      env: { ...process.env, ...getProxyEnv() },
+      shell: cmd.type === "npm" && isWin,
+      env,
     });
     let stderrOutput = "";
     p.stdout!.on("data", (buf: Buffer) =>
@@ -86,8 +115,8 @@ export function installBackend(
         success: false,
         error: isPermissionError
           ? isWin
-            ? `Permission denied. Run "${binary} ${args.join(" ")}" in a terminal opened as Administrator.`
-            : `Permission denied. Try: sudo ${binary} ${args.join(" ")}`
+            ? `Permission denied. Run the installer in a terminal opened as Administrator.`
+            : `Permission denied. Try running the install command with sudo.`
           : `Install failed with exit code ${code}. See output above.`,
       });
     });
