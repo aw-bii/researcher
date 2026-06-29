@@ -26,14 +26,30 @@ export function useMessages(conversationId: string | null) {
 
   useEffect(() => {
     const offChunk = onChatChunk(({ conversationId: cid, type, content }) => {
-      if (type !== "text") return;
-      streamingContent.current += content;
       setMessages((prev) => {
         const last = prev[prev.length - 1];
-        if (last?.role === "assistant" && last.conversationId === cid) {
+        if (
+          !last ||
+          last.role !== "assistant" ||
+          (last.conversationId !== cid && last.conversationId !== "")
+        ) {
+          return prev;
+        }
+        if (type === "text") {
+          streamingContent.current += content;
           return [
             ...prev.slice(0, -1),
-            { ...last, content: streamingContent.current },
+            { ...last, content: streamingContent.current, conversationId: cid },
+          ];
+        }
+        if (type === "error") {
+          return [
+            ...prev.slice(0, -1),
+            {
+              ...last,
+              content: `⚠ Error: ${content}`,
+              conversationId: cid,
+            },
           ];
         }
         return prev;
