@@ -2,8 +2,14 @@ import { useState } from "react";
 import { installBackend } from "../../ipc";
 
 const LABELS: Record<string, string> = {
+  claude: "Claude Code",
+  "claude-api": "Claude API",
   gemini: "Gemini CLI",
+  "gemini-api": "Gemini API",
   opencode: "Opencode",
+  ollama: "Ollama",
+  openrouter: "OpenRouter",
+  codex: "Codex",
 };
 
 interface Props {
@@ -49,6 +55,10 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
     }
   };
 
+  const startOllama = () => {
+    window.ipc.invoke("ollama:start").catch(() => {});
+  };
+
   if (missing.length === 0) {
     return (
       <div className="flex flex-col gap-6">
@@ -90,6 +100,14 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
           <div className="flex items-center justify-between">
             <span className="font-medium text-sm">{LABELS[id] ?? id}</span>
             <div className="flex gap-2">
+              {id === "ollama" && (
+                <button
+                  onClick={startOllama}
+                  className="btn-sm border border-border-strong hoverable:hover:bg-bubble"
+                >
+                  Start Ollama
+                </button>
+              )}
               <button
                 onClick={() => install(id)}
                 disabled={installing[id] || done[id]}

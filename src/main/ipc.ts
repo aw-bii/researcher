@@ -17,6 +17,7 @@ import { KeyManager } from "./security/key-manager";
 import https from "https";
 import cron from "node-cron";
 import path from "path";
+import { spawn } from "child_process";
 
 export const MAX_PROMPT_LENGTH = 100_000;
 export const MAX_MESSAGE_LENGTH = 100_000;
@@ -502,5 +503,13 @@ export function registerIpcHandlers(win: BrowserWindow): void {
   ipcMain.handle(IPC.PLUGIN_RELOAD, async () => {
     const pluginDir = path.join(app.getPath("userData"), "plugins");
     await PluginManager.reload(pluginDir);
+  });
+
+  ipcMain.handle(IPC.OLLAMA_START, () => {
+    const child = spawn("ollama", ["serve"], {
+      detached: true,
+      stdio: "ignore",
+    });
+    child.unref();
   });
 }

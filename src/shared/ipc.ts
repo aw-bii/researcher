@@ -14,6 +14,7 @@ export const IPC = {
   WIZARD_PROBE: "wizard:probe",
   WIZARD_INSTALL: "wizard:install",
   WIZARD_DONE: "wizard:done",
+  OLLAMA_START: "ollama:start",
   PIPELINE_LIST: "pipeline:list",
   PIPELINE_SAVE: "pipeline:save",
   PIPELINE_DELETE: "pipeline:delete",

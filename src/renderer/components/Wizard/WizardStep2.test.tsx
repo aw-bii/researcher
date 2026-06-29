@@ -39,3 +39,30 @@ describe("WizardStep2 install error", () => {
     expect(await findByText(/installation failed/i)).toBeTruthy();
   });
 });
+
+describe("WizardStep2 - Labels and Ollama", () => {
+  it("shows a label for every missing backend including ollama and codex", () => {
+    render(
+      <WizardStep2
+        missing={["ollama", "codex", "claude", "openrouter"]}
+        onNext={vi.fn()}
+        onBack={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("Ollama")).toBeTruthy();
+    expect(screen.getByText("Codex")).toBeTruthy();
+    expect(screen.getByText("Claude Code")).toBeTruthy();
+    expect(screen.getByText("OpenRouter")).toBeTruthy();
+  });
+
+  it("shows a Start Ollama button for the ollama backend", () => {
+    render(
+      <WizardStep2
+        missing={["ollama"]}
+        onNext={vi.fn()}
+        onBack={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("Start Ollama")).toBeTruthy();
+  });
+});
