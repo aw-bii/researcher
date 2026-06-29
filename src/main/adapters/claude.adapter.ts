@@ -1,41 +1,9 @@
-import fs from "fs";
-import path from "path";
-import { app } from "electron";
 import { spawn, ChildProcess } from "child_process";
 import type {
   BackendAdapter,
   MessageChunk,
   Attachment,
 } from "../../shared/types";
-import { AttachmentService } from "../attachments/service";
-
-let _binaryPath: string | null = null;
-
-function getClaudeBinaryPath(): string {
-  if (_binaryPath) return _binaryPath;
-  const binaryName = process.platform === "win32" ? "claude.exe" : "claude";
-  const bundledPath = app.isPackaged
-    ? path.join(process.resourcesPath!, "claude-bin", binaryName)
-    : path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "resources",
-        "claude-bin",
-        binaryName,
-      );
-  try {
-    if (fs.existsSync(bundledPath)) {
-      _binaryPath = bundledPath;
-      return _binaryPath;
-    }
-  } catch {
-    /* fallback */
-  }
-  _binaryPath = "claude";
-  return _binaryPath;
-}
 
 export class ClaudeAdapter implements BackendAdapter {
   id = "claude";
@@ -43,7 +11,7 @@ export class ClaudeAdapter implements BackendAdapter {
 
   async isAvailable(): Promise<boolean> {
     return new Promise((resolve) => {
-      const p = spawn(getClaudeBinaryPath(), ["--version"], { stdio: "pipe" });
+      const p = spawn("claude", ["--version"], { stdio: "pipe" });
       p.on("close", (code) => resolve(code === 0));
       p.on("error", () => resolve(false));
     });
@@ -51,7 +19,7 @@ export class ClaudeAdapter implements BackendAdapter {
 
   async checkAuth(): Promise<boolean> {
     return new Promise((resolve) => {
-      const p = spawn(getClaudeBinaryPath(), ["--version"], { stdio: "pipe" });
+      const p = spawn("claude", ["--version"], { stdio: "pipe" });
       p.on("close", (code) => resolve(code === 0));
       p.on("error", () => resolve(false));
     });
@@ -73,13 +41,6 @@ export class ClaudeAdapter implements BackendAdapter {
           injections.push(
             `[Attachment: ${att.originalName}]\n(extraction failed)\n[/Attachment]`,
           );
-        } else if (!fs.existsSync(att.storedPath)) {
-          console.warn(
-            `[ClaudeAdapter] attachment file not found: ${att.storedPath}, falling back to content injection`,
-          );
-          injections.push(
-            `[Attachment: ${att.originalName}]\n${AttachmentService.getContent(att)}\n[/Attachment]`,
-          );
         } else {
           args.push("--file", att.storedPath);
         }
@@ -95,7 +56,7 @@ export class ClaudeAdapter implements BackendAdapter {
     let resolve: (() => void) | null = null;
     let done = false;
 
-    this.proc = spawn(getClaudeBinaryPath(), args, { stdio: "pipe" });
+    this.proc = spawn("claude", args, { stdio: "pipe" });
 
     this.proc.stdout!.on("data", (buf: Buffer) => {
       for (const line of buf.toString().split("\n").filter(Boolean)) {

@@ -66,6 +66,24 @@ describe("ClaudeAdapter.send", () => {
   });
 });
 
+describe("ClaudeAdapter.spawn", () => {
+  it("calls spawn with 'claude' (PATH lookup), not a bundled path", async () => {
+    mockSpawn([], 0);
+    const adapter = new ClaudeAdapter();
+    await adapter.isAvailable().catch(() => {});
+    const spawnMock = vi.mocked(child_process.spawn);
+    expect(spawnMock).toHaveBeenCalledWith(
+      "claude",
+      expect.any(Array),
+      expect.any(Object),
+    );
+    const firstArg = spawnMock.mock.calls[0][0];
+    expect(firstArg).toBe("claude");
+    expect(firstArg).not.toContain("resources");
+    expect(firstArg).not.toContain("claude-bin");
+  });
+});
+
 describe("ClaudeAdapter attachment routing", () => {
   const validAttachment: Attachment = {
     id: "att-1",
