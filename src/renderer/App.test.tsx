@@ -50,6 +50,16 @@ import { createConversation } from "./ipc";
 
 beforeEach(() => {
   localStorage.setItem("wizardDone", "1");
+  // jsdom doesn't implement matchMedia; provide a minimal stub
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn((query: string) => ({
+      matches: query.includes("1024") ? true : false,
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  });
   vi.mocked(Sidebar).mockReset();
   vi.mocked(Sidebar).mockImplementation(() => null);
   vi.mocked(SettingsModal).mockReset();
@@ -104,7 +114,7 @@ describe("App layout", () => {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    vi.mocked(createConversation).mockResolvedValueOnce(fakeConv as never);
+    vi.mocked(createConversation).mockResolvedValueOnce(fakeConv as Awaited<ReturnType<typeof createConversation>>);
 
     // Render a visible marker when BottomBar is mounted
     vi.mocked(BottomBar).mockImplementation(() => (

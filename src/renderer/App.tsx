@@ -9,6 +9,8 @@ import { SecurityDialog } from "./components/SecurityDialog";
 import { UpdateBanner } from "./components/UpdateBanner";
 import { DiagnosticBanner } from "./components/DiagnosticBanner";
 import { usePipelines } from "./hooks/usePipelines";
+import { useSidebarCollapsed } from "./hooks/useSidebarCollapsed";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import {
   getConversation,
   createConversation,
@@ -54,14 +56,9 @@ function App() {
   const { templates } = usePipelines();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsSection, setSettingsSection] = useState<SettingsSection>("settings");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(window.innerWidth < 1024);
+  const [sidebarCollapsed, toggleSidebarCollapsed] = useSidebarCollapsed();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [viewportLg, setViewportLg] = useState(window.innerWidth >= 1024);
-
-  useEffect(() => {
-    const onResize = () => setViewportLg(window.innerWidth >= 1024);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [backendRefresh, setBackendRefresh] = useState(0);
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([]);
@@ -110,10 +107,13 @@ function App() {
 
   const handleNew = useCallback(async () => {
     try {
+      const pipelineTemplateId =
+        mode === "pipeline" ? selectedTemplate?.id : undefined;
       const conv = await createConversation(
         `Conversation ${new Date().toLocaleDateString()}`,
         backend,
         personaId ?? undefined,
+        pipelineTemplateId,
       );
       setActiveConvId(conv.id);
       setActiveConvMeta(conv);
@@ -121,7 +121,7 @@ function App() {
     } catch (err) {
       console.error("Failed to create conversation:", err);
     }
-  }, [backend, personaId]);
+  }, [backend, personaId, mode, selectedTemplate]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -129,6 +129,10 @@ function App() {
       if (mod && e.key === "n") {
         e.preventDefault();
         handleNew();
+      }
+      if (mod && e.key === "f") {
+        e.preventDefault();
+        document.querySelector<HTMLInputElement>('input[aria-label="Search conversations"]')?.focus();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -143,6 +147,13 @@ function App() {
 
   useEffect(() => {
     checkConnectivity().then((r) => setOnline(r.online)).catch(() => setOnline(false));
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const handler = (e: MediaQueryListEvent) => setViewportLg(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   if (!wizardDone) {
@@ -165,7 +176,7 @@ function App() {
       >
         Skip to main content
       </a>
-      <div className="flex h-screen overflow-hidden bg-surface text-text-base">
+      <div className="flex h-screen overflow-hidden bg-surface text-text-base relative">
         <DiagnosticBanner />
       {viewportLg ? (
         <Sidebar
@@ -185,25 +196,25 @@ function App() {
         />
       ) : (
         <>
-          {!sidebarCollapsed && (
+          {mobileSidebarOpen && (
             <div
               className="fixed inset-0 z-30 bg-black/30"
-              onClick={() => setSidebarCollapsed(true)}
+              onClick={() => setMobileSidebarOpen(false)}
             />
           )}
           <div
             className={`fixed left-0 top-0 z-40 h-full transition-transform duration-200 ease-drawer ${
-              sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
+              mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <Sidebar
-              collapsed={sidebarCollapsed}
+              collapsed={false}
               activeId={activeConvId}
               onSelect={(id) => {
-                setSidebarCollapsed(true);
+                setMobileSidebarOpen(false);
                 setActiveConvId(id);
               }}
-              onNew={() => { handleNew(); setSidebarCollapsed(true); }}
+              onNew={() => { handleNew(); setMobileSidebarOpen(false); }}
               onDelete={handleDelete}
               onRename={handleRename}
               refreshTrigger={refreshTrigger}
@@ -214,6 +225,19 @@ function App() {
             />
           </div>
         </>
+      )}
+      {viewportLg && (
+        <button
+          onClick={toggleSidebarCollapsed}
+          aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!sidebarCollapsed}
+          className={`absolute top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-4 h-8 rounded-r-md bg-surface-subtle border border-l-0 border-border text-text-muted hoverable:hover:text-text-base hoverable:hover:bg-surface transition-[left,colors] duration-200 ease-press ${sidebarCollapsed ? "left-0" : "left-48 lg:left-64"}`}
+        >
+          {sidebarCollapsed
+            ? <CaretRight size={10} weight="bold" />
+            : <CaretLeft size={10} weight="bold" />
+          }
+        </button>
       )}
 
       <div className="flex flex-col flex-1 min-w-0 overflow-x-hidden">
@@ -291,6 +315,7 @@ function App() {
                       if (t) setMode("pipeline");
                     }}
                     backendRefresh={backendRefresh}
+                    disabled={!!activeConvId}
                   />
                 }
               />
