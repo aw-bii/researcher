@@ -87,7 +87,10 @@ describe("installBackend", () => {
   it("uses curl for opencode, not npm", async () => {
     const originalPlatform = process.platform;
     // Mock as non-Windows to test sh behavior
-    Object.defineProperty(process, "platform", { value: "linux", writable: true });
+    Object.defineProperty(process, "platform", {
+      value: "linux",
+      writable: true,
+    });
 
     vi.mocked(child_process.spawn).mockReturnValue(makeMockProcess(0));
 
@@ -100,7 +103,10 @@ describe("installBackend", () => {
       expect.objectContaining({ stdio: "pipe" }),
     );
 
-    Object.defineProperty(process, "platform", { value: originalPlatform, writable: true });
+    Object.defineProperty(process, "platform", {
+      value: originalPlatform,
+      writable: true,
+    });
   });
 
   it("returns permission-error message when stderr contains EACCES", async () => {
@@ -131,7 +137,10 @@ describe("installBackend", () => {
 
   it("uses powershell on win32 for curl-based backends", async () => {
     const originalPlatform = process.platform;
-    Object.defineProperty(process, "platform", { value: "win32", writable: true });
+    Object.defineProperty(process, "platform", {
+      value: "win32",
+      writable: true,
+    });
 
     vi.mocked(child_process.spawn).mockReturnValue(makeMockProcess(0));
 
@@ -143,6 +152,9 @@ describe("installBackend", () => {
       expect.anything(),
     );
 
-    Object.defineProperty(process, "platform", { value: originalPlatform, writable: true });
+    Object.defineProperty(process, "platform", {
+      value: originalPlatform,
+      writable: true,
+    });
   });
 });

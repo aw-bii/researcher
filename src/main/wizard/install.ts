@@ -110,10 +110,10 @@ export function installBackend(
       args = [
         "-Command",
         `$tmp = [System.IO.Path]::GetTempFileName() + '.sh'; ` +
-        `Invoke-WebRequest -Uri '${cmd.url}' -OutFile $tmp; ` +
-        `if (Get-Command bash -ErrorAction SilentlyContinue) { bash $tmp } ` +
-        `else { Write-Error 'bash not found. Install Git for Windows or WSL, then re-run.' }; ` +
-        `Remove-Item $tmp -Force`,
+          `Invoke-WebRequest -Uri '${cmd.url}' -OutFile $tmp; ` +
+          `if (Get-Command bash -ErrorAction SilentlyContinue) { bash $tmp } ` +
+          `else { Write-Error 'bash not found. Install Git for Windows or WSL, then re-run.' }; ` +
+          `Remove-Item $tmp -Force`,
       ];
     } else {
       binary = "sh";
