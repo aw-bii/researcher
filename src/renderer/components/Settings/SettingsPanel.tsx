@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getSetting, setSetting } from "../../ipc/settings";
-import { getAppVersion, storeKey, deleteKey, hasKey } from "../../ipc/key";
+import { getSetting, setSetting, getAppVersion } from "../../ipc/settings";
+import { storeKey, deleteKey, hasKey } from "../../ipc/key";
 import { probeBackend } from "../../ipc/backend";
 import { getProxySettings, setProxySettings } from "../../ipc/net";
 

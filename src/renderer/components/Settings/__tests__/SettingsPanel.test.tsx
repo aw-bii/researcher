@@ -26,7 +26,6 @@ const { mockGetAppVersion, mockGetSetting, mockHasKey, mockGetProxySettings } = 
 }));
 
 vi.mock("../../../ipc/key", () => ({
-  getAppVersion: mockGetAppVersion,
   hasKey: mockHasKey,
   storeKey: vi.fn(),
   deleteKey: vi.fn(),
@@ -34,6 +33,7 @@ vi.mock("../../../ipc/key", () => ({
 vi.mock("../../../ipc/settings", () => ({
   getSetting: mockGetSetting,
   setSetting: vi.fn(),
+  getAppVersion: mockGetAppVersion,
 }));
 vi.mock("../../../ipc/net", () => ({
   getProxySettings: mockGetProxySettings,
