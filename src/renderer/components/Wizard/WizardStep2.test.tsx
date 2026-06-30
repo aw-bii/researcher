@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { WizardStep2 } from "./WizardStep2";
-import { probeBackend } from "../../ipc/backend";
+import { probeBackend, installBackend } from "../../ipc/backend";
 
 vi.mock("../../ipc/backend", () => ({
   installBackend: vi.fn().mockResolvedValue({ success: false }),
@@ -100,5 +100,22 @@ describe("WizardStep2 - Re-probe on mount", () => {
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: /Install/i })).toBeNull();
     });
+  });
+});
+
+describe("WizardStep2 - Spinner and status line", () => {
+  it("shows a spinner while installing and hides the terminal pre block", async () => {
+    vi.mocked(installBackend).mockImplementation(
+      () => new Promise((res) => setTimeout(() => res({ success: true }), 100)),
+    );
+    vi.mocked(probeBackend).mockResolvedValue({ available: false, authenticated: false });
+    (window as unknown as { ipc: { on: ReturnType<typeof vi.fn> } }).ipc = {
+      on: vi.fn().mockReturnValue(() => {}),
+    };
+    render(<WizardStep2 missing={["gemini"]} onNext={vi.fn()} onBack={vi.fn()} />);
+    await waitFor(() => screen.getByRole("button", { name: /^Install$/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Install$/ }));
+    expect(screen.getByTestId("install-spinner-gemini")).toBeInTheDocument();
+    expect(screen.queryByRole("log")).toBeNull(); // no <pre> terminal
   });
 });

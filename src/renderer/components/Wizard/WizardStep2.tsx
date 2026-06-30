@@ -216,10 +216,14 @@ export function WizardStep2({ missing, onNext, onBack }: Props) {
                   </button>
                 </div>
               </div>
-              {(logs[id] ?? []).length > 0 && (
-                <pre className="text-xs bg-gray-900 text-gray-300 rounded-lg p-2 max-h-24 overflow-y-auto">
-                  {logs[id].join("\n")}
-                </pre>
+              {installing[id] && (
+                <div className="flex items-center gap-2 text-xs text-text-muted" data-testid={`install-spinner-${id}`}>
+                  <div className="w-4 h-4 rounded-full border-2 border-border border-t-primary animate-spin flex-shrink-0" />
+                  <span className="truncate">{logs[id]?.at(-1) ?? "Installing…"}</span>
+                </div>
+              )}
+              {!installing[id] && done[id] && verified[id] && (
+                <p className="text-xs text-primary">Installed and detected on PATH ✓</p>
               )}
               {errors[id] && (
                 <p className="text-xs text-red-500">{errors[id]}</p>
