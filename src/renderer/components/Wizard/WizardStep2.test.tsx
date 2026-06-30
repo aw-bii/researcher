@@ -2,8 +2,6 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { WizardStep2 } from "./WizardStep2";
 import { probeBackend, installBackend } from "../../ipc/backend";
-import { relaunchApp } from "../../ipc/app";
-
 vi.mock("../../ipc/backend", () => ({
   installBackend: vi.fn().mockResolvedValue({ success: false }),
   probeBackend: vi
