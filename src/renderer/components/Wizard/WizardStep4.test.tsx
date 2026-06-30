@@ -15,17 +15,14 @@ beforeEach(() => {
 describe("WizardStep4", () => {
   it("renders API key inputs for claude-api, gemini-api, openrouter", () => {
     render(<WizardStep4 onComplete={vi.fn()} onBack={vi.fn()} />);
-    const claudeInput = screen.getByPlaceholderText(/sk-ant-api03/);
-    const geminiInput = screen.getByPlaceholderText(/AIza/);
-    const openrouterInput = screen.getByPlaceholderText(/sk-or-v1/);
-    expect(claudeInput).toBeInTheDocument();
-    expect(geminiInput).toBeInTheDocument();
-    expect(openrouterInput).toBeInTheDocument();
+    expect(screen.getByLabelText("Claude API Key")).toBeInTheDocument();
+    expect(screen.getByLabelText("Gemini API Key")).toBeInTheDocument();
+    expect(screen.getByLabelText("OpenRouter API Key")).toBeInTheDocument();
   });
 
   it("stores key and shows verified state on Save", async () => {
     render(<WizardStep4 onComplete={vi.fn()} onBack={vi.fn()} />);
-    fireEvent.change(screen.getByPlaceholderText(/sk-ant-api03/), {
+    fireEvent.change(screen.getByLabelText("Claude API Key"), {
       target: { value: "sk-ant-test" },
     });
     fireEvent.click(screen.getByRole("button", { name: /Save Claude API Key/i }));
