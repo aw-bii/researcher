@@ -282,6 +282,12 @@ function OpenRouterSignIn() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    hasKey("openrouter").then((has) => {
+      if (has) setSaved(true);
+    });
+  }, []);
+
   const openSignIn = async () => {
     await openExternal("https://openrouter.ai/keys");
     setShowPaste(true);
@@ -304,7 +310,7 @@ function OpenRouterSignIn() {
       <label className="text-xs font-medium text-text-base">OpenRouter</label>
       {saved ? (
         <p className="text-xs text-primary">Signed in ✓
-          <button onClick={() => setSaved(false)} className="ml-2 text-text-muted underline text-xs">Change</button>
+          <button onClick={async () => { await deleteKey("openrouter"); setSaved(false); }} className="ml-2 text-text-muted underline text-xs">Remove</button>
         </p>
       ) : (
         <button

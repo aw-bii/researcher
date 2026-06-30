@@ -60,7 +60,7 @@ describe("SettingsPanel mount IPC calls", () => {
     await vi.waitFor(() => {
       expect(mockGetAppVersion).toHaveBeenCalledTimes(1);
       expect(mockGetSetting).toHaveBeenCalledWith("theme");
-      expect(mockHasKey).toHaveBeenCalledTimes(4);
+      expect(mockHasKey).toHaveBeenCalledTimes(5);
       expect(mockGetProxySettings).toHaveBeenCalledTimes(1);
       expect(screen.getByText(/1\.0\.0/)).toBeTruthy();
     });
@@ -82,7 +82,7 @@ describe("SettingsPanel mount IPC calls", () => {
     await vi.waitFor(() => {
       // theme and key states still loaded even though version failed
       expect(mockGetSetting).toHaveBeenCalledWith("theme");
-      expect(mockHasKey).toHaveBeenCalledTimes(4);
+      expect(mockHasKey).toHaveBeenCalledTimes(5);
     });
     // No uncaught rejection — component still renders
     expect(screen.getByText(/theme/i)).toBeTruthy();
