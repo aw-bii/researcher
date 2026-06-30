@@ -285,7 +285,7 @@ function OpenRouterSignIn() {
   useEffect(() => {
     hasKey("openrouter").then((has) => {
       if (has) setSaved(true);
-    });
+    }).catch(() => {});
   }, []);
 
   const openSignIn = async () => {
@@ -310,7 +310,7 @@ function OpenRouterSignIn() {
       <label className="text-xs font-medium text-text-base">OpenRouter</label>
       {saved ? (
         <p className="text-xs text-primary">Signed in ✓
-          <button onClick={async () => { await deleteKey("openrouter"); setSaved(false); }} className="ml-2 text-text-muted underline text-xs">Remove</button>
+          <button onClick={async () => { await deleteKey("openrouter"); setSaved(false); setShowPaste(false); }} className="ml-2 text-text-muted underline text-xs">Remove</button>
         </p>
       ) : (
         <button

@@ -60,6 +60,7 @@ describe("SettingsPanel mount IPC calls", () => {
     await vi.waitFor(() => {
       expect(mockGetAppVersion).toHaveBeenCalledTimes(1);
       expect(mockGetSetting).toHaveBeenCalledWith("theme");
+      // 4 API_PROVIDERS + 1 from OpenRouterSignIn.useEffect on mount
       expect(mockHasKey).toHaveBeenCalledTimes(5);
       expect(mockGetProxySettings).toHaveBeenCalledTimes(1);
       expect(screen.getByText(/1\.0\.0/)).toBeTruthy();
